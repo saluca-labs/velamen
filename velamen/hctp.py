@@ -15,7 +15,7 @@ import hashlib
 import json
 import struct
 import zlib
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 PROTO_VERSION = 0x01

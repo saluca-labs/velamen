@@ -124,7 +124,7 @@ def _bits_to_tokens(bits: list[int], dists: list[list[dict]]) -> list[str]:
     After all message bits are consumed, the zero-padded tail naturally
     selects high-probability (greedy) tokens.
     """
-    padded = bits + [0] * (_PREC * 2 + 64)
+    padded = bits + [0] * max(_PREC * 2 + 64, len(dists) * 3)
 
     value, ptr = 0, 0
     for _ in range(_PREC):
@@ -233,7 +233,11 @@ def encode(message: str, channel: dict, key: str, raw: bool = False) -> str:
         ciphertext = _encrypt(msg_bytes, derived)
         payload = struct.pack(">I", len(ciphertext)) + ciphertext
 
-    bits = _bytes_to_bits(payload)
+    # Append guard bytes so the AC encoder's flush ambiguity falls outside
+    # the real payload.  The length prefix tells the decoder exactly how
+    # many bytes to read, so these trailing bytes are harmlessly ignored.
+    _AC_GUARD = b"\xaa" * 4
+    bits = _bytes_to_bits(payload + _AC_GUARD)
     n_bits = len(bits)
 
     capacity_bits = sum(
@@ -281,26 +285,21 @@ def decode(cover_text: str, channel: dict, key: str, raw: bool = False) -> str:
         tokens.append(matched)
         remaining = remaining[len(matched):]
 
-    recovered_bits: list[int] = []
-    payload_len: int = 0
-    needed_bits: int = LENGTH_LEN * 8
-    found = False
+    # Encode all tokens at once to recover the bit stream.
+    # (The previous incremental approach re-encoded partial sequences whose
+    # flush bits could differ from the full-sequence encoding.)
+    recovered_bits = _tokens_to_bits(tokens, dists)
 
-    for n in range(1, len(tokens) + 1):
-        recovered_bits = _tokens_to_bits(tokens[:n], dists[:n])
-        if len(recovered_bits) < LENGTH_LEN * 8:
-            continue
-        if needed_bits == LENGTH_LEN * 8:
-            length_bytes_tmp = _bits_to_bytes(list(recovered_bits[:LENGTH_LEN * 8]))
-            payload_len = struct.unpack(">I", length_bytes_tmp)[0]
-            if payload_len > 64 * 1024 * 1024:
-                raise ValueError(f"Implausible payload length: {payload_len}")
-            needed_bits = (LENGTH_LEN + payload_len) * 8
-        if len(recovered_bits) >= needed_bits:
-            found = True
-            break
+    if len(recovered_bits) < LENGTH_LEN * 8:
+        raise ValueError("Not enough bits recovered to read length header.")
 
-    if not found:
+    length_bytes_tmp = _bits_to_bytes(list(recovered_bits[:LENGTH_LEN * 8]))
+    payload_len = struct.unpack(">I", length_bytes_tmp)[0]
+    if payload_len > 64 * 1024 * 1024:
+        raise ValueError(f"Implausible payload length: {payload_len}")
+
+    needed_bits = (LENGTH_LEN + payload_len) * 8
+    if len(recovered_bits) < needed_bits:
         raise ValueError("Not enough bits recovered to read full payload.")
 
     payload_bits = list(recovered_bits[LENGTH_LEN * 8: LENGTH_LEN * 8 + payload_len * 8])

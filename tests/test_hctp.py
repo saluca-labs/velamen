@@ -2,7 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 """Tests for the HCTP protocol layer."""
 
-from velamen.hctp import ContextChain, SyncPacket, AckPacket, ContextBlock
+from velamen.hctp import ContextChain, SyncPacket, ContextBlock
 
 
 def test_roundtrip_sync_ack():
@@ -12,7 +12,7 @@ def test_roundtrip_sync_ack():
     sender.add_turn("agent", "Hi there", "response")
 
     packet = sender.build_sync_packet()
-    wire = packet.serialize()
+    packet.serialize()
 
     # Receiver
     receiver = ContextChain()
@@ -22,7 +22,7 @@ def test_roundtrip_sync_ack():
     assert blocks[1].summary == "response"
 
     ack = receiver.build_ack(packet)
-    ack_wire = ack.serialize()
+    ack.serialize()
 
     # Sender processes ACK
     new_root = sender.acknowledge(ack.seq)

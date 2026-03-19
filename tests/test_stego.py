@@ -6,7 +6,6 @@ These tests use a minimal synthetic channel (not a real LLM) to validate
 the arithmetic coding roundtrip without requiring Ollama.
 """
 
-import json
 from velamen.stego import encode, decode, _bytes_to_bits, _bits_to_bytes
 
 
@@ -87,3 +86,52 @@ def test_cover_is_string():
     cover = encode("x", channel, key="", raw=True)
     assert isinstance(cover, str)
     assert len(cover) > 0
+
+
+def test_large_channel_encode_decode():
+    """Encode/decode with 150+ distributions must not raise IndexError."""
+    # "hi" raw = 4 (len prefix) + 2 (msg) = 6 bytes = 48 bits
+    # Need ~48/1.8 ~ 27 positions minimum; use 200 to test large channel padding
+    channel = _make_synthetic_channel(200)
+    msg = "hi"
+    cover = encode(msg, channel, key="", raw=True)
+    recovered = decode(cover, channel, key="", raw=True)
+    assert recovered == msg
+
+
+def test_encrypted_roundtrip():
+    """Encode with key, decode with same key recovers message exactly."""
+    # "secret payload" = 14 bytes; encrypted = 12+14+16 = 42 bytes; +4 len = 46 bytes = 368 bits
+    # Need ~368/1.8 ~ 205 positions
+    channel = _make_synthetic_channel(250)
+    msg = "secret payload"
+    key = "test-passphrase-42"
+    cover = encode(msg, channel, key=key, raw=False)
+    recovered = decode(cover, channel, key=key, raw=False)
+    assert recovered == msg
+
+
+def test_decode_exact_recovery():
+    """Direct raw roundtrip recovers the exact original message (no off-by-one)."""
+    # "exact recovery test!" = 20 bytes; raw = 4+20 = 24 bytes = 192 bits
+    # Need ~192/1.8 ~ 107 positions
+    channel = _make_synthetic_channel(150)
+    msg = "exact recovery test!"
+    cover = encode(msg, channel, key="", raw=True)
+    recovered = decode(cover, channel, key="", raw=True)
+    assert recovered == msg, f"Expected {msg!r}, got {recovered!r}"
+
+
+def test_wrong_key_fails():
+    """Decoding with wrong key should raise or return garbage."""
+    # "do not leak" = 11 bytes; encrypted = 12+11+16 = 39 bytes; +4 = 43 bytes = 344 bits
+    # Need ~344/1.8 ~ 192 positions
+    channel = _make_synthetic_channel(250)
+    msg = "do not leak"
+    cover = encode(msg, channel, key="correct-key", raw=False)
+    try:
+        result = decode(cover, channel, key="wrong-key", raw=False)
+        # If decryption didn't raise, the result must differ from original
+        assert result != msg, "Wrong key should not recover the original message"
+    except Exception:
+        pass  # Expected: decryption failure with wrong key
