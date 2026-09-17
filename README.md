@@ -14,10 +14,15 @@ Because both sides share the same frozen distributions, no live LLM inference is
 
 ## Installation
 
+Velamen is distributed as source from this GitHub repository only. It is not
+published on PyPI; never install a package of this name from PyPI, it is not ours.
+Install from git, pinned to a tag or commit you have reviewed (the commit below is
+an example; replace it with the ref you want):
+
 ```bash
-pip install velamen
+pip install "velamen @ git+https://github.com/saluca-labs/velamen@2d992c1a6157710227af792d43b89a034913491b"
 # For encrypted channels (recommended):
-pip install velamen[crypto]
+pip install "velamen[crypto] @ git+https://github.com/saluca-labs/velamen@2d992c1a6157710227af792d43b89a034913491b"
 ```
 
 ## Quick start
