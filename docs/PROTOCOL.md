@@ -1,4 +1,4 @@
-# HCTP — Hash-Chain Context Transfer Protocol
+# HCTP - Hash-Chain Context Transfer Protocol
 ## Hermes Protocol Layer v1 | Saluca LLC 2026
 
 ---
@@ -9,11 +9,11 @@ HCTP is a lightweight protocol for transferring conversational context between t
 parties over a bandwidth-constrained or covert channel (e.g., Hermes stego). It
 achieves three goals:
 
-1. **Minimal bandwidth** — static (shared) history is never retransmitted; only the
+1. **Minimal bandwidth** - static (shared) history is never retransmitted; only the
    delta travels.
-2. **Tamper detection** — a hash chain covers every block; any modification breaks
+2. **Tamper detection** - a hash chain covers every block; any modification breaks
    the chain.
-3. **Predictable data volume** — payload size is bounded by the dynamic window,
+3. **Predictable data volume** - payload size is bounded by the dynamic window,
    not the total conversation length.
 
 The protocol operates entirely over serialized bytes; Hermes (or any transport) is
@@ -29,11 +29,11 @@ A single conversation turn:
 { seq: uint32, role: "user"|"agent", content_hash: sha256hex, summary: utf8 }
 ```
 `content_hash` is SHA-256 of the raw turn text. `summary` is a short (≤120 char)
-semantic distillation — the actual plaintext never has to cross the channel.
+semantic distillation - the actual plaintext never has to cross the channel.
 
 ### Static Section
 All blocks both parties have previously acknowledged. Represented as a single
-**static root hash** — the running SHA-256 fold over every acknowledged block:
+**static root hash** - the running SHA-256 fold over every acknowledged block:
 ```
 root_0  = SHA256(b"hctp-genesis-v1")
 root_n  = SHA256(root_{n-1} || SHA256(serialize(block_n)))
@@ -48,7 +48,7 @@ as payload. Compressed with zlib level 9 after JSON serialization.
 ```
 combined = SHA256(static_root || dynamic_compressed_bytes)
 ```
-Authenticates the full packet — static alignment + dynamic payload together.
+Authenticates the full packet - static alignment + dynamic payload together.
 
 ---
 
@@ -117,7 +117,7 @@ Next SYNC carries only new turns since the ACK.
 
 ---
 
-## Rolling Root — Bandwidth Properties
+## Rolling Root - Bandwidth Properties
 
 Wire overhead per SYNC = 74 bytes fixed (header + static_root + combined_hash) + dynamic payload.
 
@@ -128,7 +128,7 @@ Wire overhead per SYNC = 74 bytes fixed (header + static_root + combined_hash) +
 | 1000 turns + 0 new  | 74 B          | 0 B             | 74 B         |
 
 Key property: **fixed overhead is constant regardless of history length.** Once turns are
-acknowledged into the static root, they never cross the wire again — only their 32-byte
+acknowledged into the static root, they never cross the wire again - only their 32-byte
 hash commitment remains.
 
 ---
@@ -146,7 +146,7 @@ The dynamic payload carries summaries, not raw text. Example block:
 ```
 A 500-word turn compresses to ~80 bytes on the wire. Full fidelity verification is
 possible if the receiver holds the original (hash check). If not, the summary is
-the context — "the gist."
+the context - "the gist."
 
 ---
 
@@ -155,13 +155,13 @@ the context — "the gist."
 | Property                  | Mechanism                                                        |
 |---------------------------|------------------------------------------------------------------|
 | Confidentiality           | Hermes AEAD (ChaCha20-Poly1305) wraps the full packet           |
-| Integrity & authenticity  | Hermes AEAD — `combined_hash` is a redundant pre-AEAD check only|
-| Chained ordering          | Hash chain — each root embeds all prior acknowledged roots       |
+| Integrity & authenticity  | Hermes AEAD - `combined_hash` is a redundant pre-AEAD check only|
+| Chained ordering          | Hash chain - each root embeds all prior acknowledged roots       |
 | Replay rejection          | Receiver tracks `last_acked_seq`; rejects SYNC with seq ≤ last  |
 | Tamper evidence           | Any block modification breaks `combined_hash` before AEAD layer |
 
 **Important notes:**
-- `combined_hash` is SHA-256 (unkeyed). It adds **no** cryptographic authenticity on its own — an
+- `combined_hash` is SHA-256 (unkeyed). It adds **no** cryptographic authenticity on its own - an
   attacker who can forge packets can recompute it for any payload. Authenticity and integrity come
   from the Hermes AEAD layer. `combined_hash` is retained as an application-level ordering check
   (detects accidental corruption or protocol bugs before AEAD decryption).
@@ -195,11 +195,11 @@ cover = stego.encode(payload_bytes.hex(), channel, key="shared-secret")
 
 ## Limitations / Design Choices
 
-- **summary is trusted, not verified** — receiver cannot verify the summary matches
+- **summary is trusted, not verified** - receiver cannot verify the summary matches
   content_hash without having the original text. This is intentional: we trade
   perfect fidelity for minimal bandwidth. Use content_hash for deferred verification.
-- **No fragmentation** — if dynamic payload exceeds channel capacity, split into
+- **No fragmentation** - if dynamic payload exceeds channel capacity, split into
   multiple SYNC packets with same static_root, incrementing seq. Reassembly is
   caller's responsibility.
-- **No ordering guarantee** — seq number is informational; out-of-order SYNCs are
+- **No ordering guarantee** - seq number is informational; out-of-order SYNCs are
   detected by static_root mismatch and rejected.

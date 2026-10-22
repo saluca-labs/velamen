@@ -1,0 +1,12 @@
+Image: basic-usage-demo-2026-10-22.png
+Captured: 2026-10-22, from a fresh clone of saluca-labs/velamen at commit 213c107 (origin/main).
+Runtime: Python 3.12.10 on Windows 11, velamen installed with
+  pip install "velamen[crypto,dev] @ git+https://github.com/saluca-labs/velamen@213c107"
+  (cryptography 50.0.2, requests 2.34.2).
+Command (run from the repo root, no Ollama needed):
+  python examples/basic_usage.py > demo.txt
+Render: the captured stdout was printed unchanged through rich Console(record=True),
+exported with export_svg, and screenshotted with headless Chromium (playwright).
+The terminal font draws "---" and "..." as ligatures; the underlying text is the
+script's ASCII output. The channel in this demo is synthetic (hand-built
+distributions in the script), not a frozen model channel.
