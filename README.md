@@ -148,15 +148,32 @@ This example serialises to 281 bytes (74 fixed plus the compressed delta) in a 2
 2. **Encode** (`velamen/stego.py`): prefix the message (or its ChaCha20-Poly1305 ciphertext) with a 4-byte length, treat the bits as an arithmetic-coded stream, and expand them into tokens chosen from the frozen distributions.
 3. **Decode** (`velamen/stego.py`): split the cover text back into tokens by longest match against each position's distribution, re-compress to bits, read the length, and decrypt.
 
+The same frozen distributions (`channel.hchan`) drive both directions. Encoding a message runs
+the arithmetic coder in its decompression direction (bits out to tokens), and decoding runs it in
+its compression direction (tokens back to bits); both functions live in `velamen/stego.py`.
+
 ```mermaid
-flowchart LR
-  M[message] --> E[encrypt + length prefix]
-  E --> AC[arithmetic decoder over frozen distributions]
-  H[(channel.hchan)] --> AC
-  AC --> C[cover text]
-  C --> T[tokenise by longest match]
-  H --> T
-  T --> AE[arithmetic encoder] --> D[decrypt] --> M2[message]
+flowchart TB
+  H[(channel.hchan<br/>frozen top-5 distributions)]
+
+  subgraph encode["encode() path"]
+    direction LR
+    M1[message] --> EN["_encrypt + 4-byte length prefix"]
+    EN --> B1["_bytes_to_bits"]
+    B1 --> TK["_bits_to_tokens<br/>(arithmetic coder, decompress)"]
+    TK --> C1[cover text]
+  end
+
+  subgraph decode["decode() path"]
+    direction LR
+    C2[cover text] --> TB["_tokens_to_bits<br/>(longest-match, then compress)"]
+    TB --> B2["_bits_to_bytes + strip length"]
+    B2 --> DE["_decrypt"]
+    DE --> M2[message]
+  end
+
+  H --> TK
+  H --> TB
 ```
 
 Key files: `velamen/cli.py` (CLI), `velamen/stego.py` (coding and crypto), `velamen/channel.py` (freeze and verify), `velamen/hctp.py` (HCTP), `docs/PROTOCOL.md` (HCTP specification; "Hermes" there names the stego transport that `velamen/stego.py` implements).

@@ -2,6 +2,8 @@
 
 > Python library and CLI for steganography over LLM token probability distributions: arithmetic coding over a pre-frozen table of top-5 token probabilities (a `.hchan` file), with optional ChaCha20-Poly1305 encryption, plus HCTP, a hash-chained context transfer format. Apache-2.0.
 
+If a command, tool or endpoint is not listed in this file, it does not exist in velamen. The complete public surface is: the `velamen` CLI with exactly four subcommands (`freeze`, `verify`, `encode`, `decode`), and the Python API `encode`, `decode`, `freeze`, `verify`, `ContextChain`, `ContextBlock`, `SyncPacket`, `AckPacket` (all exported from `velamen/__init__.py`). There is no network service and no other entry point.
+
 Facts agents often get wrong: it is not on PyPI (install from git only, `pip install "velamen[crypto] @ git+https://github.com/saluca-labs/velamen@<ref>"`); encode and decode need no model, only the shared `.hchan` file; `velamen freeze` needs a local Ollama and, as of 2026-10-22, did not produce a usable channel in the one configuration tested (see the README correction); the cover text is not shown to be indistinguishable from model output. "Hermes" in docs/PROTOCOL.md names the stego transport that velamen/stego.py implements. Python 3.10+, one runtime dependency (`requests`).
 
 ## Docs

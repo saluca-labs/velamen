@@ -2,11 +2,15 @@
 
 > Python library and CLI for steganography over LLM token probability distributions: arithmetic coding over a pre-frozen table of top-5 token probabilities (a `.hchan` file), with optional ChaCha20-Poly1305 encryption, plus HCTP, a hash-chained context transfer format. Apache-2.0.
 
+If a command, tool or endpoint is not listed in this file, it does not exist in velamen. The complete public surface is: the `velamen` CLI with exactly four subcommands (`freeze`, `verify`, `encode`, `decode`), and the Python API `encode`, `decode`, `freeze`, `verify`, `ContextChain`, `ContextBlock`, `SyncPacket`, `AckPacket` (all exported from `velamen/__init__.py`). There is no network service and no other entry point.
+
 Facts agents often get wrong: it is not on PyPI (install from git only, `pip install "velamen[crypto] @ git+https://github.com/saluca-labs/velamen@<ref>"`); encode and decode need no model, only the shared `.hchan` file; `velamen freeze` needs a local Ollama and, as of 2026-10-22, did not produce a usable channel in the one configuration tested (see the README correction); the cover text is not shown to be indistinguishable from model output. "Hermes" in docs/PROTOCOL.md names the stego transport that velamen/stego.py implements. Python 3.10+, one runtime dependency (`requests`).
+
+The full text of this repository's prose docs, concatenated, each under its path. Regenerate this file whenever one of them changes.
 
 ## README.md
 
-# Velamen
+### Velamen
 
 Steganographic communication over LLM token probability distributions: a Python library and CLI that hides a message in generated-looking text by arithmetic coding over a pre-frozen table of token probabilities.
 
@@ -14,7 +18,7 @@ Velamen encodes secret messages into LLM-style text using arithmetic coding over
 
 > **Correction, 2026-10-22.** This README said "The cover text is indistinguishable from normal model output." That is not established and does not hold by construction. Each position's distribution is frozen along the model's greedy path, but the encoder then picks tokens other than the greedy one, so later tokens are drawn from distributions conditioned on text that was never emitted. The table also keeps only the top 5 tokens per position, renormalised. No detectability evaluation exists in this repo. See also the second correction under [Quickstart](#quickstart).
 
-## Status
+#### Status
 
 Experimental (version 0.1.0). What works today, measured 2026-10-22 on `origin/main` at `213c107`:
 
@@ -22,7 +26,7 @@ Experimental (version 0.1.0). What works today, measured 2026-10-22 on `origin/m
 - HCTP (`ContextChain`, `SyncPacket`, `AckPacket`) builds, serialises and verifies packets; the fixed SYNC overhead is 74 bytes, as documented.
 - `velamen freeze` against a real Ollama model did not produce a usable channel in the one configuration tested (see the correction below). Treat channel freezing as not working until that is fixed.
 
-## Install
+#### Install
 
 Velamen is distributed as source from this GitHub repository only. It is not
 published on PyPI; never install a package of this name from PyPI, it is not ours.
@@ -48,7 +52,7 @@ pip install -e ".[crypto,dev]"
 python -m pytest tests/ -v
 ```
 
-## Quickstart
+#### Quickstart
 
 The shortest run that produces a visible result needs no model. From a clone:
 
@@ -87,9 +91,9 @@ The full output is in [Screenshots](#screenshots).
 >
 > The likely cause is in `velamen/channel.py`: `_query_top_k` calls Ollama's `/api/chat` with the growing text as a *user* message and `num_predict: 1`, so each position is the first token of a fresh assistant reply rather than the next token of a continuation. An encrypted message needs 36 bytes of overhead (4 length, 12 nonce, 16 tag, 4 guard) plus the message itself, so "attack at dawn" needs 50 bytes of capacity. Two freezes with identical arguments on the same machine also gave different channels (81 and 84 bits of capacity), so frozen channels are not reproducible from the prompt alone; exchange the `.hchan` file itself.
 
-## Usage
+#### Usage
 
-### CLI
+##### CLI
 
 ```bash
 velamen freeze --prompt "<seed text>" --model <ollama model> --tokens 200 --out channel.hchan
@@ -110,7 +114,7 @@ Positions:   200
 Capacity:    ~2 bytes
 ```
 
-### Python API
+##### Python API
 
 ```python
 import json
@@ -126,7 +130,7 @@ assert recovered == "secret message"
 
 `examples/encrypted_channel.py` shows an encrypted exchange between two parties and an eavesdropper with the wrong key, plus HCTP state sync, on a synthetic channel.
 
-### HCTP: Hash-Chain Context Transfer Protocol
+##### HCTP: Hash-Chain Context Transfer Protocol
 
 Velamen includes HCTP, a protocol for transferring conversational context as compact, tamper-evident, hash-chained payloads. Only deltas cross the wire; full history is a 32-byte root hash.
 
@@ -143,49 +147,66 @@ wire_bytes = packet.serialize()  # 74 bytes + compressed delta
 
 This example serialises to 281 bytes (74 fixed plus the compressed delta) in a 2026-10-22 run. See [docs/PROTOCOL.md](docs/PROTOCOL.md) for the full specification.
 
-### Security
+##### Security
 
 - **Encryption**: ChaCha20-Poly1305 AEAD (via the `cryptography` package)
 - **Key derivation**: PBKDF2-HMAC-SHA256, 100,000 iterations, fixed salt `velamen-channel-v1`
 - **Integrity**: HCTP hash chains provide tamper-evident session history
 - **Channel security**: frozen distributions are a pre-shared secret; the `.hchan` file must be exchanged securely
 
-## Architecture
+#### Architecture
 
 1. **Freeze** (`velamen/channel.py`): query an Ollama model for the top-5 token log-probabilities at each position along a greedy path and save them, with a SHA-256 fingerprint and a capacity estimate, as a `.hchan` JSON file.
 2. **Encode** (`velamen/stego.py`): prefix the message (or its ChaCha20-Poly1305 ciphertext) with a 4-byte length, treat the bits as an arithmetic-coded stream, and expand them into tokens chosen from the frozen distributions.
 3. **Decode** (`velamen/stego.py`): split the cover text back into tokens by longest match against each position's distribution, re-compress to bits, read the length, and decrypt.
 
+The same frozen distributions (`channel.hchan`) drive both directions. Encoding a message runs
+the arithmetic coder in its decompression direction (bits out to tokens), and decoding runs it in
+its compression direction (tokens back to bits); both functions live in `velamen/stego.py`.
+
 ```mermaid
-flowchart LR
-  M[message] --> E[encrypt + length prefix]
-  E --> AC[arithmetic decoder over frozen distributions]
-  H[(channel.hchan)] --> AC
-  AC --> C[cover text]
-  C --> T[tokenise by longest match]
-  H --> T
-  T --> AE[arithmetic encoder] --> D[decrypt] --> M2[message]
+flowchart TB
+  H[(channel.hchan<br/>frozen top-5 distributions)]
+
+  subgraph encode["encode() path"]
+    direction LR
+    M1[message] --> EN["_encrypt + 4-byte length prefix"]
+    EN --> B1["_bytes_to_bits"]
+    B1 --> TK["_bits_to_tokens<br/>(arithmetic coder, decompress)"]
+    TK --> C1[cover text]
+  end
+
+  subgraph decode["decode() path"]
+    direction LR
+    C2[cover text] --> TB["_tokens_to_bits<br/>(longest-match, then compress)"]
+    TB --> B2["_bits_to_bytes + strip length"]
+    B2 --> DE["_decrypt"]
+    DE --> M2[message]
+  end
+
+  H --> TK
+  H --> TB
 ```
 
 Key files: `velamen/cli.py` (CLI), `velamen/stego.py` (coding and crypto), `velamen/channel.py` (freeze and verify), `velamen/hctp.py` (HCTP), `docs/PROTOCOL.md` (HCTP specification; "Hermes" there names the stego transport that `velamen/stego.py` implements).
 
-## Screenshots
+#### Screenshots
 
 ![Terminal output of python examples/basic_usage.py: a synthetic 200-position channel, raw and encrypted round-trips that decode to the original message, a wrong-key rejection (InvalidTag) and a capacity refusal](docs/img/basic-usage-demo-2026-10-22.png)
 
 Captured 2026-10-22 from a fresh clone at `213c107`; the command and rendering method are in [docs/img/basic-usage-demo-2026-10-22.txt](docs/img/basic-usage-demo-2026-10-22.txt).
 
-## Citation
+#### Citation
 
 No archived record yet.
 
-## License
+#### License
 
 Apache-2.0. See [LICENSE](LICENSE).
 
 Copyright 2026 Saluca LLC.
 
-## Links
+#### Links
 
 - [docs/PROTOCOL.md](docs/PROTOCOL.md): HCTP specification
 - [Ollama](https://ollama.com): the local model runtime `velamen freeze` calls
@@ -194,12 +215,12 @@ _Last updated: 2026-10-22_
 
 ## docs/PROTOCOL.md
 
-# HCTP - Hash-Chain Context Transfer Protocol
-## Hermes Protocol Layer v1 | Saluca LLC 2026
+### HCTP - Hash-Chain Context Transfer Protocol
+#### Hermes Protocol Layer v1 | Saluca LLC 2026
 
 ---
 
-## Overview
+#### Overview
 
 HCTP is a lightweight protocol for transferring conversational context between two
 parties over a bandwidth-constrained or covert channel (e.g., Hermes stego). It
@@ -217,9 +238,9 @@ responsible for covert encoding. HCTP is the *payload format*.
 
 ---
 
-## Concepts
+#### Concepts
 
-### Context Block
+##### Context Block
 A single conversation turn:
 ```
 { seq: uint32, role: "user"|"agent", content_hash: sha256hex, summary: utf8 }
@@ -227,7 +248,7 @@ A single conversation turn:
 `content_hash` is SHA-256 of the raw turn text. `summary` is a short (≤120 char)
 semantic distillation - the actual plaintext never has to cross the channel.
 
-### Static Section
+##### Static Section
 All blocks both parties have previously acknowledged. Represented as a single
 **static root hash** - the running SHA-256 fold over every acknowledged block:
 ```
@@ -236,11 +257,11 @@ root_n  = SHA256(root_{n-1} || SHA256(serialize(block_n)))
 ```
 Transmitting the static root costs exactly 32 bytes regardless of history length.
 
-### Dynamic Section
+##### Dynamic Section
 New blocks since the last acknowledged sync. These are the only blocks that travel
 as payload. Compressed with zlib level 9 after JSON serialization.
 
-### Combined Hash
+##### Combined Hash
 ```
 combined = SHA256(static_root || dynamic_compressed_bytes)
 ```
@@ -248,9 +269,9 @@ Authenticates the full packet - static alignment + dynamic payload together.
 
 ---
 
-## Wire Format
+#### Wire Format
 
-### Sync Packet (what Hermes carries)
+##### Sync Packet (what Hermes carries)
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ version      : 1 byte   (0x01)                              │
@@ -264,7 +285,7 @@ Authenticates the full packet - static alignment + dynamic payload together.
 Total minimum: 74 bytes + dynamic payload
 ```
 
-### Ack Packet
+##### Ack Packet
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ version      : 1 byte   (0x01)                              │
@@ -277,7 +298,7 @@ Total: 38 bytes (fits in tiny channel)
 
 ---
 
-## State Machine
+#### State Machine
 
 ```
 SENDER                              RECEIVER
@@ -313,7 +334,7 @@ Next SYNC carries only new turns since the ACK.
 
 ---
 
-## Rolling Root - Bandwidth Properties
+#### Rolling Root - Bandwidth Properties
 
 Wire overhead per SYNC = 74 bytes fixed (header + static_root + combined_hash) + dynamic payload.
 
@@ -329,7 +350,7 @@ hash commitment remains.
 
 ---
 
-## Semantic Compression
+#### Semantic Compression
 
 The dynamic payload carries summaries, not raw text. Example block:
 ```json
@@ -346,7 +367,7 @@ the context - "the gist."
 
 ---
 
-## Security Properties
+#### Security Properties
 
 | Property                  | Mechanism                                                        |
 |---------------------------|------------------------------------------------------------------|
@@ -369,7 +390,7 @@ the context - "the gist."
 
 ---
 
-## Integration with Hermes
+#### Integration with Hermes
 
 ```python
 from sync import ContextChain, SyncPacket
@@ -389,7 +410,7 @@ cover = stego.encode(payload_bytes.hex(), channel, key="shared-secret")
 
 ---
 
-## Limitations / Design Choices
+#### Limitations / Design Choices
 
 - **summary is trusted, not verified** - receiver cannot verify the summary matches
   content_hash without having the original text. This is intentional: we trade
