@@ -1,0 +1,27 @@
+# velamen
+
+> Python library and CLI for steganography over LLM token probability distributions: arithmetic coding over a pre-frozen table of top-5 token probabilities (a `.hchan` file), with optional ChaCha20-Poly1305 encryption, plus HCTP, a hash-chained context transfer format. Apache-2.0.
+
+If a command, tool or endpoint is not listed in this file, it does not exist in velamen. The complete public surface is: the `velamen` CLI with exactly four subcommands (`freeze`, `verify`, `encode`, `decode`), and the Python API `encode`, `decode`, `freeze`, `verify`, `ContextChain`, `ContextBlock`, `SyncPacket`, `AckPacket` (all exported from `velamen/__init__.py`). There is no network service and no other entry point.
+
+Facts agents often get wrong: it is not on PyPI (install from git only, `pip install "velamen[crypto] @ git+https://github.com/saluca-labs/velamen@<ref>"`); encode and decode need no model, only the shared `.hchan` file; `velamen freeze` needs a local Ollama and, as of 2026-10-22, did not produce a usable channel in the one configuration tested (see the README correction); the cover text is not shown to be indistinguishable from model output. "Hermes" in docs/PROTOCOL.md names the stego transport that velamen/stego.py implements. Python 3.10+, one runtime dependency (`requests`).
+
+## Docs
+
+- [README](https://github.com/saluca-labs/velamen/blob/main/README.md): status, install, quickstart, usage, corrections
+- [HCTP protocol](https://github.com/saluca-labs/velamen/blob/main/docs/PROTOCOL.md): wire format, hash chain, security properties of HCTP
+- [AGENTS.md](https://github.com/saluca-labs/velamen/blob/main/AGENTS.md): setup, tests and conventions for agents working in the repo
+
+## Code
+
+- [velamen/stego.py](https://github.com/saluca-labs/velamen/blob/main/velamen/stego.py): `encode` / `decode`, arithmetic coding, PBKDF2 key derivation, ChaCha20-Poly1305
+- [velamen/channel.py](https://github.com/saluca-labs/velamen/blob/main/velamen/channel.py): `freeze` (Ollama top-k logprobs to a `.hchan` file) and `verify` (fingerprint check)
+- [velamen/hctp.py](https://github.com/saluca-labs/velamen/blob/main/velamen/hctp.py): `ContextChain`, `SyncPacket`, `AckPacket`
+- [velamen/cli.py](https://github.com/saluca-labs/velamen/blob/main/velamen/cli.py): the `velamen` command (freeze, verify, encode, decode)
+- [examples/basic_usage.py](https://github.com/saluca-labs/velamen/blob/main/examples/basic_usage.py): runnable demo on a synthetic channel, no model needed
+
+## Optional
+
+- [tests/](https://github.com/saluca-labs/velamen/blob/main/tests): pytest suite for stego and HCTP
+- [llms-full.txt](https://github.com/saluca-labs/velamen/blob/main/llms-full.txt): README and docs/PROTOCOL.md in one file
+- [LICENSE](https://github.com/saluca-labs/velamen/blob/main/LICENSE): Apache License 2.0
