@@ -1,3 +1,5 @@
+![velamen](docs/img/banner-2026-10-23.jpg)
+
 # Velamen
 
 Steganographic communication over LLM token probability distributions: a Python library and CLI that hides a message in generated-looking text by arithmetic coding over a pre-frozen table of token probabilities.
