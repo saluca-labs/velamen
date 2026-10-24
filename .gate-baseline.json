@@ -1,0 +1,133 @@
+{
+ "version": 2,
+ "written": "2026-10-22",
+ "rule": "debt may only shrink; see repo-merge-gate.md GATE-3",
+ "note": "ids are hashes of each finding; run `python -m gate run` to see them",
+ "entries": [
+  {
+   "check": "style",
+   "id": "075cf1e99df1ad8ad175",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "4dff4aa619f1d9dae970",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "7e09cd51c5c805bb55d5",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "0a4476934e41baf7f8bf",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "501f2f33c92f5a6154ec",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "6cdb9a9cff3c2e72171c",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "45ee61f9d6ba7d70319a",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "116ddb346a17f193507a",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "c7fc61ad5865b28c71e0",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "67d5b064adb0dc6f5ba5",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "fce277d72719a6613459",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "86eb2c69e40ebf0896bc",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "3e9ec91d686cd31d19bd",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "13c841e3f7c7711e6370",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "3714de8fe5d88acb5712",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "style",
+   "id": "b4bd43f392c3874a86bf",
+   "path": "docs/PROTOCOL.md"
+  },
+  {
+   "check": "claims",
+   "id": "a59c86aa776f4a18c505",
+   "path": ""
+  },
+  {
+   "check": "docs",
+   "id": "b4d08d8b436c35746850",
+   "path": "README.md"
+  },
+  {
+   "check": "docs",
+   "id": "aafc68c653a507b6941e",
+   "path": "README.md"
+  },
+  {
+   "check": "docs",
+   "id": "bbb1f99b140392f1906f",
+   "path": "README.md"
+  },
+  {
+   "check": "docs",
+   "id": "6a102ada6b632910f355",
+   "path": "README.md"
+  },
+  {
+   "check": "docs",
+   "id": "7fcb8037f0cbaee52798",
+   "path": "README.md"
+  },
+  {
+   "check": "docs",
+   "id": "d1d18256ebd90ac25aa0",
+   "path": "README.md"
+  },
+  {
+   "check": "docs",
+   "id": "b79ed584daf8a632b453",
+   "path": ""
+  },
+  {
+   "check": "branch-protection",
+   "id": "f0fac6b41c6325ac9702",
+   "path": ""
+  }
+ ]
+}
