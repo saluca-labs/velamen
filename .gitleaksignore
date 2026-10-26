@@ -1,0 +1,10 @@
+# Reviewed false positives, one fingerprint per line, with the reason.
+#
+# Both are the same word: the llms.txt capability line in two historical
+# commits says stego.py does "PBKDF2 key derivation, ChaCha20 ...". gitleaks'
+# generic-api-key rule matches the cipher name because it sits after the word
+# "key". There is no credential on either line; the file is a prose index of
+# the repo's own modules. Reviewed 2026-10-26 when the merge gate first ran
+# against this repo.
+9f5ee7be1fce76f9f16e451a2af1b39e71783016:llms.txt:generic-api-key:17
+80f68c36d878a28ffaac070cb7f38892837945d8:llms.txt:generic-api-key:15
