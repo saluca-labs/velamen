@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Tests
+
+- Konrad Gruszka's ten number-lexeme cases (rfc8785-237 `02_encoding.json`) now run against
+  the -01 seq rule: two parse to their value, eight are refused, among them `1.0`, `1e0` and
+  `-0`.
+
 ## 0.2.0 - 2026-11-11
 
 HCTP now implements draft-ruvalcaba-hctp-01. The wire format (version 0x01) is unchanged, but

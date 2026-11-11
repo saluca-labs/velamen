@@ -29,7 +29,7 @@ configuration tested on 2026-10-22 (see the README corrections).
 
 ## The only numbers to trust (each with its source)
 
-- 163 tests pass on Python 3.12 (measured 2026-11-11; run them to re-confirm). Source: `tests/`.
+- 174 tests pass on Python 3.12 (measured 2026-11-11; run them to re-confirm). Source: `tests/`.
 - Channel keeps the top 5 tokens per position. Source: `TOP_K` in `velamen/channel.py`.
 - HCTP SYNC fixed overhead is 74 bytes. Source: `SyncPacket` in `velamen/hctp.py` (`deserialize`
   rejects anything shorter).
