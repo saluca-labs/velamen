@@ -7,14 +7,16 @@ Encode secrets into natural-looking LLM-generated text using arithmetic
 coding over pre-frozen token probability distributions.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from velamen.stego import encode, decode
 from velamen.channel import freeze, verify
-from velamen.hctp import ContextChain, ContextBlock, SyncPacket, AckPacket
+from velamen.hctp import (
+    ContextChain, ContextBlock, SyncPacket, AckPacket, HctpSender, HctpReceiver,
+)
 
 __all__ = [
     "encode", "decode",
     "freeze", "verify",
-    "ContextChain", "ContextBlock", "SyncPacket", "AckPacket",
+    "ContextChain", "ContextBlock", "SyncPacket", "AckPacket", "HctpSender", "HctpReceiver",
 ]

@@ -1,0 +1,290 @@
+{
+  "draft": "draft-ruvalcaba-hctp-01",
+  "genesis_seed": "hctp-genesis-v1",
+  "genesis_root": "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+  "sequences": {
+    "ascii-3": {
+      "description": "Three ASCII blocks; identical to the -00 set, whose roots do not change.",
+      "blocks": [
+        {
+          "seq": 0,
+          "role": "user",
+          "raw_text": "Hello, agent.",
+          "summary": "greeting",
+          "content_hash": "f147584aaf1619220e65bb2479151a9cd3e9f60a61bb39f835a2e1511510124c"
+        },
+        {
+          "seq": 1,
+          "role": "agent",
+          "raw_text": "Hello. What do you need?",
+          "summary": "greeting reply",
+          "content_hash": "8914a57df59378c590c3ceee45811cead614d0b4ece46fc416a942824341b0c2"
+        },
+        {
+          "seq": 2,
+          "role": "user",
+          "raw_text": "Summarise RFC 6234.",
+          "summary": "asks for RFC 6234 summary",
+          "content_hash": "8da09e2f397d858d80a74554d165dd07ed6890f2f8b88c95c03c70253630b3df"
+        }
+      ],
+      "folds": [
+        {
+          "seq": 0,
+          "canonical": "{\"content_hash\":\"f147584aaf1619220e65bb2479151a9cd3e9f60a61bb39f835a2e1511510124c\",\"role\":\"user\",\"seq\":0,\"summary\":\"greeting\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2266313437353834616166313631393232306536356262323437393135316139636433653966363061363162623339663833356132653135313135313031323463222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a226772656574696e67227d",
+          "block_hash": "ae545376e2626ee047fd17bd0a1f824c37990bb2d86510c96901296a4a97a8d6",
+          "root": "b83c934e3064759521013688ce3424284d6bdaa391706d8d9111148dc6645be0"
+        },
+        {
+          "seq": 1,
+          "canonical": "{\"content_hash\":\"8914a57df59378c590c3ceee45811cead614d0b4ece46fc416a942824341b0c2\",\"role\":\"agent\",\"seq\":1,\"summary\":\"greeting reply\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2238393134613537646635393337386335393063336365656534353831316365616436313464306234656365343666633431366139343238323433343162306332222c22726f6c65223a226167656e74222c22736571223a312c2273756d6d617279223a226772656574696e67207265706c79227d",
+          "block_hash": "c943be4df14822fad2b55840904a5008f45430995b21edbbe69e691c8bf99823",
+          "root": "9aa6829d8d6dac9ca8db70cb6f1ec593009de2cabb381ce81f8a9082468ed134"
+        },
+        {
+          "seq": 2,
+          "canonical": "{\"content_hash\":\"8da09e2f397d858d80a74554d165dd07ed6890f2f8b88c95c03c70253630b3df\",\"role\":\"user\",\"seq\":2,\"summary\":\"asks for RFC 6234 summary\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2238646130396532663339376438353864383061373435353464313635646430376564363839306632663862383863393563303363373032353336333062336466222c22726f6c65223a2275736572222c22736571223a322c2273756d6d617279223a2261736b7320666f722052464320363233342073756d6d617279227d",
+          "block_hash": "1ed72134076e5eb1b4f98a9035a8df665f9c89d46ce80f17612d650c489e8a9d",
+          "root": "e2354b7bf5555847e57e5de40146b02c3deeafc616860576bd51fa1e07adbf01"
+        }
+      ]
+    },
+    "non-ascii-1": {
+      "description": "Latin and CJK text: raw UTF-8 under -01; its root differs from the -00 escaped form.",
+      "blocks": [
+        {
+          "seq": 0,
+          "role": "user",
+          "raw_text": "Café, naïve, 東京",
+          "summary": "café in Tōkyō",
+          "content_hash": "55f27a610a16e4c6fc6ae1a2a130dae60624617eba7a5b038e78ba23c01e2279"
+        }
+      ],
+      "folds": [
+        {
+          "seq": 0,
+          "canonical": "{\"content_hash\":\"55f27a610a16e4c6fc6ae1a2a130dae60624617eba7a5b038e78ba23c01e2279\",\"role\":\"user\",\"seq\":0,\"summary\":\"café in Tōkyō\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2235356632376136313061313665346336666336616531613261313330646165363036323436313765626137613562303338653738626132336330316532323739222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22636166c3a920696e2054c58d6b79c58d227d",
+          "block_hash": "2c0fab35bd793caea74f32024130181c2887d23cc38cdcbf253f1ab37fc8d05a",
+          "root": "e5c13f98509eea497a337e4caa0239d8da270db6d2a7df786b7c964cddeb2b36"
+        }
+      ]
+    },
+    "escapes-1": {
+      "description": "The escaped set: quotation mark, reverse solidus, the five short forms, other C0 controls.",
+      "blocks": [
+        {
+          "seq": 0,
+          "role": "user",
+          "raw_text": "raw",
+          "summary": "say \"hi\"\\path\b\t\n\f\r\u0001\u001f end",
+          "content_hash": "d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde"
+        }
+      ],
+      "folds": [
+        {
+          "seq": 0,
+          "canonical": "{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"say \\\"hi\\\"\\\\path\\b\\t\\n\\f\\r\\u0001\\u001f end\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2264373433396265653234373733626362666132643061393739343765653336323237623130643130323262316135353834376539323839363562623662666465222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22736179205c2268695c225c5c706174685c625c745c6e5c665c725c75303030315c753030316620656e64227d",
+          "block_hash": "290fd04eae3abffa01afddd0d0d66167b43fb6b67623ffe8fc2252ca686ff1af",
+          "root": "641c7c95e286810e70225e5ef3a431da99d5c9fdf537fd831e0c0ce106aca1b9"
+        }
+      ]
+    },
+    "unescaped-1": {
+      "description": "Characters that MUST NOT be escaped: < > & U+007F U+2028 U+2029.",
+      "blocks": [
+        {
+          "seq": 0,
+          "role": "agent",
+          "raw_text": "raw",
+          "summary": "a<b>&cd e f",
+          "content_hash": "d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde"
+        }
+      ],
+      "folds": [
+        {
+          "seq": 0,
+          "canonical": "{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"agent\",\"seq\":0,\"summary\":\"a<b>&cd e f\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2264373433396265653234373733626362666132643061393739343765653336323237623130643130323262316135353834376539323839363562623662666465222c22726f6c65223a226167656e74222c22736571223a302c2273756d6d617279223a22613c623e26637f64e280a865e280a966227d",
+          "block_hash": "a93c354ac0f8785b0f032188e460ecd2a314303f0bb6d36bedba089a4d6db861",
+          "root": "0aeb8e7e99db210e087fb5e0bc2ad1555a166e0013191a3f3d5b567d3954ce46"
+        }
+      ]
+    },
+    "non-bmp-1": {
+      "description": "A character outside the BMP is written as its 4 UTF-8 octets and counts as one code point.",
+      "blocks": [
+        {
+          "seq": 0,
+          "role": "user",
+          "raw_text": "😀",
+          "summary": "smile 😀",
+          "content_hash": "f0443a342c5ef54783a111b51ba56c938e474c32324d90c3a60c9c8e3a37e2d9"
+        }
+      ],
+      "folds": [
+        {
+          "seq": 0,
+          "canonical": "{\"content_hash\":\"f0443a342c5ef54783a111b51ba56c938e474c32324d90c3a60c9c8e3a37e2d9\",\"role\":\"user\",\"seq\":0,\"summary\":\"smile 😀\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2266303434336133343263356566353437383361313131623531626135366339333865343734633332333234643930633361363063396338653361333765326439222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22736d696c6520f09f9880227d",
+          "block_hash": "d306a5c6b36ec4866bbb8a51a756ddf2784ac7e216bff688cad624751eb4ba2e",
+          "root": "df49143603c554459e91f3e83b8f8bf8e2afb51fb37d3fae5557bfbdf070220a"
+        }
+      ]
+    },
+    "nfc-nfd-1": {
+      "description": "No normalization: NFC and NFD forms of the same text give different hashes and roots.",
+      "blocks": [
+        {
+          "seq": 0,
+          "role": "user",
+          "raw_text": "café",
+          "summary": "café",
+          "content_hash": "850f7dc43910ff890f8879c0ed26fe697c93a067ad93a7d50f466a7028a9bf4e"
+        },
+        {
+          "seq": 1,
+          "role": "user",
+          "raw_text": "café",
+          "summary": "café",
+          "content_hash": "81ef060bcd98adc7824eb5c1ada83c32491b16018e11e79f00ab9d09e04b015a"
+        }
+      ],
+      "folds": [
+        {
+          "seq": 0,
+          "canonical": "{\"content_hash\":\"850f7dc43910ff890f8879c0ed26fe697c93a067ad93a7d50f466a7028a9bf4e\",\"role\":\"user\",\"seq\":0,\"summary\":\"café\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2238353066376463343339313066663839306638383739633065643236666536393763393361303637616439336137643530663436366137303238613962663465222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22636166c3a9227d",
+          "block_hash": "78ae226b1baf1666dcb2969231626958b981c6437e4d498bdceab3ba23ee2273",
+          "root": "e620887646a34ce1bf018583fd49301437be16266471eec1b899cdfb14e52242"
+        },
+        {
+          "seq": 1,
+          "canonical": "{\"content_hash\":\"81ef060bcd98adc7824eb5c1ada83c32491b16018e11e79f00ab9d09e04b015a\",\"role\":\"user\",\"seq\":1,\"summary\":\"café\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2238316566303630626364393861646337383234656235633161646138336333323439316231363031386531316537396630306162396430396530346230313561222c22726f6c65223a2275736572222c22736571223a312c2273756d6d617279223a2263616665cc81227d",
+          "block_hash": "dbdde38f96c52e7dcf14e863d3e5f6989229990644ef4479594670cef103269f",
+          "root": "1a63167b96add5461b46b16b3071ea72e8add4e45fd3a50b20525ac09ab32a38"
+        }
+      ]
+    },
+    "summary-max-1": {
+      "description": "A summary of exactly MAX_SUMMARY_LEN code points, one of them outside the BMP.",
+      "blocks": [
+        {
+          "seq": 0,
+          "role": "user",
+          "raw_text": "raw",
+          "summary": "😀xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "content_hash": "d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde"
+        }
+      ],
+      "folds": [
+        {
+          "seq": 0,
+          "canonical": "{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"😀xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+          "canonical_hex": "7b22636f6e74656e745f68617368223a2264373433396265653234373733626362666132643061393739343765653336323237623130643130323262316135353834376539323839363562623662666465222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22f09f98807878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878227d",
+          "block_hash": "59d1570ee25b1df4218c90207de746c0677cf45011f7021e538d06920c1870be",
+          "root": "35797870d7733ca970342516de339398ee011e7ad872f86b7dfe72208fa7b959"
+        }
+      ]
+    }
+  },
+  "packet_example": {
+    "description": "SYNC of ascii-3 over root_0, and the ACK a receiver returns",
+    "uncompressed_array": "[{\"content_hash\":\"f147584aaf1619220e65bb2479151a9cd3e9f60a61bb39f835a2e1511510124c\",\"role\":\"user\",\"seq\":0,\"summary\":\"greeting\"},{\"content_hash\":\"8914a57df59378c590c3ceee45811cead614d0b4ece46fc416a942824341b0c2\",\"role\":\"agent\",\"seq\":1,\"summary\":\"greeting reply\"},{\"content_hash\":\"8da09e2f397d858d80a74554d165dd07ed6890f2f8b88c95c03c70253630b3df\",\"role\":\"user\",\"seq\":2,\"summary\":\"asks for RFC 6234 summary\"}]",
+    "dynamic_data_hex": "78da6d904b6a43310c45b7f2f038034996fcc9b49005745a4a916d3929cda77d2f198492bdd793d0420302210edc73d1cbb7aba7e3d98ee7b79d2e3bb7761d394a62d58e01331158905288634641cdb579cb3d80062cc5e79ebc28d940630089ab5bb9f9b4b79174596c1ed7625f6e0d635f0e079daf036c67b3f3fb71eb6eab7ffa94915562eb927d4c5532545fcd8c252156d316901b14b66a1c7a650c9a9912b1672c50e957afdb117bf7e323ff34dbe7fefab04553c846dde7d892a49640238b70c320ad41b41652864e3d95946a960abe4620f1c143f1ad3f7e02fd2da1cbc732f5d33c3d6f9ea6409ea73bbbbdfe009ede790c",
+    "combined_hash": "8f17a3c6d3932a515f9ce4f7139ba6c7033c718d66cd8c31fe128aeaaf05fcff",
+    "sync_hex": "015300000002adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9000000f678da6d904b6a43310c45b7f2f038034996fcc9b49005745a4a916d3929cda77d2f198492bdd793d0420302210edc73d1cbb7aba7e3d98ee7b79d2e3bb7761d394a62d58e01331158905288634641cdb579cb3d80062cc5e79ebc28d940630089ab5bb9f9b4b79174596c1ed7625f6e0d635f0e079daf036c67b3f3fb71eb6eab7ffa94915562eb927d4c5532545fcd8c252156d316901b14b66a1c7a650c9a9912b1672c50e957afdb117bf7e323ff34dbe7fefab04553c846dde7d892a49640238b70c320ad41b41652864e3d95946a960abe4620f1c143f1ad3f7e02fd2da1cbc732f5d33c3d6f9ea6409ea73bbbbdfe009ede790c8f17a3c6d3932a515f9ce4f7139ba6c7033c718d66cd8c31fe128aeaaf05fcff",
+    "ack_hex": "014100000002e2354b7bf5555847e57e5de40146b02c3deeafc616860576bd51fa1e07adbf01"
+  },
+  "must_reject": [
+    {
+      "reason": "empty array",
+      "decompressed": "[]"
+    },
+    {
+      "reason": "seq as a string",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":\"0\",\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "seq spelled 0.0",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0.0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "seq spelled 1e0",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":1e0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "seq spelled -0",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":-0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "seq spelled 00",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":00,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "uppercase content_hash",
+      "decompressed": "[{\"content_hash\":\"D7439BEE24773BCBFA2D0A97947EE36227B10D1022B1A55847E928965BB6BFDE\",\"role\":\"user\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "63-digit content_hash",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfd\",\"role\":\"user\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "extra member",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"extra\":1,\"role\":\"user\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "missing member",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0}]"
+    },
+    {
+      "reason": "duplicate member",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"role\":\"agent\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "members out of order",
+      "decompressed": "[{\"role\":\"user\",\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "insignificant whitespace",
+      "decompressed": "[{\"content_hash\": \"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "ASCII-escaped non-ASCII",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"caf\\u00e9\"}]"
+    },
+    {
+      "reason": "escaped U+2028",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u2028b\"}]"
+    },
+    {
+      "reason": "uppercase hex in an escape",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001Fb\"}]"
+    },
+    {
+      "reason": "empty role",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "role of 65 octets",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\",\"seq\":0,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "summary of 121 code points",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss\"}]"
+    },
+    {
+      "reason": "seq not starting at 0 on a fresh chain",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":1,\"summary\":\"s\"}]"
+    },
+    {
+      "reason": "seq not contiguous",
+      "decompressed": "[{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":0,\"summary\":\"s\"},{\"content_hash\":\"d7439bee24773bcbfa2d0a97947ee36227b10d1022b1a55847e928965bb6bfde\",\"role\":\"user\",\"seq\":2,\"summary\":\"s\"}]"
+    }
+  ]
+}

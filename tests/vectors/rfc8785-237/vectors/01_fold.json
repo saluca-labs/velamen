@@ -1,0 +1,784 @@
+{
+  "file": "01_fold",
+  "description": "Folding the rolling root (Section 4) over block sequences, and known wrong folds",
+  "cases": [
+    {
+      "id": "fold-01",
+      "kind": "fold",
+      "title": "Empty sequence gives root_0 = SHA256(\"hctp-genesis-v1\")",
+      "draft_refs": [
+        "Section 4, lines 262-267",
+        "Section 4, lines 273-276",
+        "Section 3.2, lines 247-248",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": []
+      },
+      "expected": {
+        "count": 0,
+        "canonical": [],
+        "canonical_sha256": [],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9"
+        ],
+        "root": "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9"
+      }
+    },
+    {
+      "id": "fold-02",
+      "kind": "fold",
+      "title": "One block",
+      "draft_refs": [
+        "Section 3.1, lines 235-241",
+        "Section 4, lines 269-271",
+        "Section 4, lines 273-276",
+        "Section 2, lines 202-205"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          }
+        ]
+      },
+      "expected": {
+        "count": 1,
+        "canonical": [
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}"
+        ],
+        "canonical_sha256": [
+          "7f04f2735aa201b5604f80f7dc71b000a56e1cbfb02d3a59d99a7b06cae19104"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97"
+        ],
+        "root": "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97"
+      }
+    },
+    {
+      "id": "fold-03",
+      "kind": "fold",
+      "title": "Three blocks",
+      "draft_refs": [
+        "Section 4, lines 273-276"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d",
+            "role": "user",
+            "seq": 2,
+            "summary": "Zusammenfassung A 2"
+          }
+        ]
+      },
+      "expected": {
+        "count": 3,
+        "canonical": [
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}",
+          "{\"content_hash\":\"506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577\",\"role\":\"user\",\"seq\":1,\"summary\":\"Zusammenfassung A 1\"}",
+          "{\"content_hash\":\"cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d\",\"role\":\"user\",\"seq\":2,\"summary\":\"Zusammenfassung A 2\"}"
+        ],
+        "canonical_sha256": [
+          "7f04f2735aa201b5604f80f7dc71b000a56e1cbfb02d3a59d99a7b06cae19104",
+          "7682eb2cc0f06f812c6cb6077e4e26f8bab4be43b6d57b5676961845a92031ec",
+          "9658087a176537313d1b7c71bb23ef90874e5908c1835fd0ef2f3f8ab1788b6d"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97",
+          "5e3ac01a76aa3b20d8e71137d4ec257fa4ce8a72e3773b79d3eff8ccbdf1e0fe",
+          "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a"
+        ],
+        "root": "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a"
+      }
+    },
+    {
+      "id": "fold-04",
+      "kind": "fold",
+      "title": "Many blocks: 1000 from a template",
+      "draft_refs": [
+        "Section 4, lines 273-276"
+      ],
+      "valid_input": true,
+      "input": {
+        "template": {
+          "role": "user",
+          "summary": "Block {i}",
+          "raw_text": "Rohtext {i}"
+        },
+        "count": 1000
+      },
+      "expected": {
+        "count": 1000,
+        "root": "462c21b6ee57d0f81974d7cb0afc44ce24e7f24520f5198b5dd46361fa9b513b"
+      }
+    },
+    {
+      "id": "fold-05",
+      "kind": "fold",
+      "title": "Repetition: same content as seq 0 and seq 1, root differs from fold-02",
+      "draft_refs": [
+        "Section 4, lines 285-288"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 0"
+          }
+        ]
+      },
+      "expected": {
+        "count": 2,
+        "canonical": [
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}",
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":1,\"summary\":\"Zusammenfassung A 0\"}"
+        ],
+        "canonical_sha256": [
+          "7f04f2735aa201b5604f80f7dc71b000a56e1cbfb02d3a59d99a7b06cae19104",
+          "8689f32f5cd4f430f94a7a9195351ae5302eca13a191dcca0275fd7e4f376297"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97",
+          "e49cc53e14decf46d03dc341d829dc7f6e5758aebfa26d3fc370a087537bf2e7"
+        ],
+        "root": "e49cc53e14decf46d03dc341d829dc7f6e5758aebfa26d3fc370a087537bf2e7"
+      }
+    },
+    {
+      "id": "fold-06",
+      "kind": "fold",
+      "title": "Swapped order: block 1 before block 0, root differs from the ordered sequence",
+      "draft_refs": [
+        "Section 4, lines 285-288"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          }
+        ]
+      },
+      "expected": {
+        "count": 2,
+        "canonical": [
+          "{\"content_hash\":\"506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577\",\"role\":\"user\",\"seq\":1,\"summary\":\"Zusammenfassung A 1\"}",
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}"
+        ],
+        "canonical_sha256": [
+          "7682eb2cc0f06f812c6cb6077e4e26f8bab4be43b6d57b5676961845a92031ec",
+          "7f04f2735aa201b5604f80f7dc71b000a56e1cbfb02d3a59d99a7b06cae19104"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "b3ca50217f8bd4d15219c133e89599fc343f8bf37ccb029f6df5de0707d69185",
+          "fc54cdb3f450e8062a9163e67a0653da5beb20919f95c30eaccc937b32938f7c"
+        ],
+        "root": "fc54cdb3f450e8062a9163e67a0653da5beb20919f95c30eaccc937b32938f7c"
+      }
+    },
+    {
+      "id": "fold-07",
+      "kind": "fold",
+      "title": "Reference for fold-06: block 0 before block 1",
+      "draft_refs": [
+        "Section 4, lines 273-276"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          }
+        ]
+      },
+      "expected": {
+        "count": 2,
+        "canonical": [
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}",
+          "{\"content_hash\":\"506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577\",\"role\":\"user\",\"seq\":1,\"summary\":\"Zusammenfassung A 1\"}"
+        ],
+        "canonical_sha256": [
+          "7f04f2735aa201b5604f80f7dc71b000a56e1cbfb02d3a59d99a7b06cae19104",
+          "7682eb2cc0f06f812c6cb6077e4e26f8bab4be43b6d57b5676961845a92031ec"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97",
+          "5e3ac01a76aa3b20d8e71137d4ec257fa4ce8a72e3773b79d3eff8ccbdf1e0fe"
+        ],
+        "root": "5e3ac01a76aa3b20d8e71137d4ec257fa4ce8a72e3773b79d3eff8ccbdf1e0fe"
+      }
+    },
+    {
+      "id": "fold-08",
+      "kind": "fold",
+      "title": "One byte changed in the summary of block 1, root differs from fold-07",
+      "draft_refs": [
+        "Section 4, lines 285-288"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 2"
+          }
+        ]
+      },
+      "expected": {
+        "count": 2,
+        "canonical": [
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}",
+          "{\"content_hash\":\"506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577\",\"role\":\"user\",\"seq\":1,\"summary\":\"Zusammenfassung A 2\"}"
+        ],
+        "canonical_sha256": [
+          "7f04f2735aa201b5604f80f7dc71b000a56e1cbfb02d3a59d99a7b06cae19104",
+          "bed6fbf2999c80c35c64e9a978b3c5b7d500508da6084a695682249973527645"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97",
+          "c3166a0bada609bf0d575ebed2dd0d10a6922fc7dc867781d51c2d698f238152"
+        ],
+        "root": "c3166a0bada609bf0d575ebed2dd0d10a6922fc7dc867781d51c2d698f238152"
+      }
+    },
+    {
+      "id": "fold-09",
+      "kind": "fold",
+      "title": "Insertion: block 0, X, block 1",
+      "draft_refs": [
+        "Section 4, lines 285-288"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015",
+            "role": "user",
+            "seq": 1,
+            "summary": "X"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          }
+        ]
+      },
+      "expected": {
+        "count": 3,
+        "canonical": [
+          "{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}",
+          "{\"content_hash\":\"4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015\",\"role\":\"user\",\"seq\":1,\"summary\":\"X\"}",
+          "{\"content_hash\":\"506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577\",\"role\":\"user\",\"seq\":1,\"summary\":\"Zusammenfassung A 1\"}"
+        ],
+        "canonical_sha256": [
+          "7f04f2735aa201b5604f80f7dc71b000a56e1cbfb02d3a59d99a7b06cae19104",
+          "533d5e6aac8c28cc3899644954b51cca5cedb5ebcc8a845a2dd8e22b9e5e1735",
+          "7682eb2cc0f06f812c6cb6077e4e26f8bab4be43b6d57b5676961845a92031ec"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97",
+          "ceb6226c55527d99f2f08290bb158936462bb85de4419ea5b3729f4374fe54bf",
+          "de2394e98be786dc9b2511099a5d8e9ef74140a516db1fbab4fab48c9fef0947"
+        ],
+        "root": "de2394e98be786dc9b2511099a5d8e9ef74140a516db1fbab4fab48c9fef0947"
+      }
+    },
+    {
+      "id": "fold-10",
+      "kind": "fold",
+      "title": "Deletion: block 1 only",
+      "draft_refs": [
+        "Section 4, lines 285-288"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          }
+        ]
+      },
+      "expected": {
+        "count": 1,
+        "canonical": [
+          "{\"content_hash\":\"506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577\",\"role\":\"user\",\"seq\":1,\"summary\":\"Zusammenfassung A 1\"}"
+        ],
+        "canonical_sha256": [
+          "7682eb2cc0f06f812c6cb6077e4e26f8bab4be43b6d57b5676961845a92031ec"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "b3ca50217f8bd4d15219c133e89599fc343f8bf37ccb029f6df5de0707d69185"
+        ],
+        "root": "b3ca50217f8bd4d15219c133e89599fc343f8bf37ccb029f6df5de0707d69185"
+      }
+    },
+    {
+      "id": "fold-11",
+      "kind": "fold",
+      "title": "Characters outside ASCII written as raw UTF-8",
+      "draft_refs": [
+        "Section 3.1, lines 235-241",
+        "Section 3.1, lines 229-230"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "3436cf1c2f912923eb6c58432bc973f1e3bf57852f000822b53954e45e6c5be4",
+            "role": "user",
+            "seq": 0,
+            "summary": "Grüße, Welt 😀"
+          }
+        ]
+      },
+      "expected": {
+        "count": 1,
+        "canonical": [
+          "{\"content_hash\":\"3436cf1c2f912923eb6c58432bc973f1e3bf57852f000822b53954e45e6c5be4\",\"role\":\"user\",\"seq\":0,\"summary\":\"Grüße, Welt 😀\"}"
+        ],
+        "canonical_sha256": [
+          "f45d2bb6c1c44594c592d240bc7f295fd64cf05ac41360f33889c0939e1e8de0"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "ee62267172c6ce35fff5d1a6ba750d56e3028a5d3a60c0bde6483699f04966c9"
+        ],
+        "root": "ee62267172c6ce35fff5d1a6ba750d56e3028a5d3a60c0bde6483699f04966c9"
+      }
+    },
+    {
+      "id": "fold-12",
+      "kind": "fold",
+      "title": "Control characters, quotation mark, reverse solidus, solidus",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+            "role": "user",
+            "seq": 0,
+            "summary": "a\nb\u001fc\"d\\e/f\u007f"
+          }
+        ]
+      },
+      "expected": {
+        "count": 1,
+        "canonical": [
+          "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\nb\\u001fc\\\"d\\\\e/f\u007f\"}"
+        ],
+        "canonical_sha256": [
+          "aa6bd4216884b7580a7d10414e9775581ea11a3a3fe64dc3cf4dc0479969f376"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "5b7f75bb5573ed540db65a3cfdd279b4c7709eb65a2c0c18951991c9ee50ee95"
+        ],
+        "root": "5b7f75bb5573ed540db65a3cfdd279b4c7709eb65a2c0c18951991c9ee50ee95"
+      }
+    },
+    {
+      "id": "fold-13",
+      "kind": "fold",
+      "title": "Summary of 120 code points (240 UTF-16 code units, 480 bytes)",
+      "draft_refs": [
+        "Section 3.1, lines 232-233",
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+            "role": "user",
+            "seq": 0,
+            "summary": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+          }
+        ]
+      },
+      "expected": {
+        "count": 1,
+        "canonical": [
+          "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀\"}"
+        ],
+        "canonical_sha256": [
+          "dd1b9404ae3935afa33770d30168a24bc2d2b6b7739daf59f82a730d3e1e5c7a"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "6b5a15c9a8731672a7ad88c4165a66a1ed1641ae717ff81a64fc69017656e6d9"
+        ],
+        "root": "6b5a15c9a8731672a7ad88c4165a66a1ed1641ae717ff81a64fc69017656e6d9"
+      }
+    },
+    {
+      "id": "fold-14",
+      "kind": "fold",
+      "title": "seq 4294967295 as a decimal number",
+      "draft_refs": [
+        "Section 3.1, lines 213-215",
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+            "role": "user",
+            "seq": 4294967295,
+            "summary": "x"
+          }
+        ]
+      },
+      "expected": {
+        "count": 1,
+        "canonical": [
+          "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":4294967295,\"summary\":\"x\"}"
+        ],
+        "canonical_sha256": [
+          "89d1adb8c9d6fc2d076b3dc77b90e622aa345636b5104cf90b2a5b6514731822"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "af50f37b118e05e4cf8fdf8a09f9a48e22067f19ae337d92969ce200670f010f"
+        ],
+        "root": "af50f37b118e05e4cf8fdf8a09f9a48e22067f19ae337d92969ce200670f010f"
+      }
+    },
+    {
+      "id": "fold-15",
+      "kind": "fold",
+      "title": "Empty role and empty summary",
+      "draft_refs": [
+        "Section 3.1, lines 217-219",
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "",
+            "seq": 0,
+            "summary": ""
+          }
+        ]
+      },
+      "expected": {
+        "count": 1,
+        "canonical": [
+          "{\"content_hash\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"role\":\"\",\"seq\":0,\"summary\":\"\"}"
+        ],
+        "canonical_sha256": [
+          "9278c9b20cb64523a25cc05c2807c42fc2334e794b24eb13550bace8c63dae8f"
+        ],
+        "roots": [
+          "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+          "3252cd1e3b0132085518397f5ed46c06bdff69ca28bcff42abef485c57688f5d"
+        ],
+        "root": "3252cd1e3b0132085518397f5ed46c06bdff69ca28bcff42abef485c57688f5d"
+      }
+    },
+    {
+      "id": "fold-16",
+      "kind": "fold_variant",
+      "title": "Wrong fold: SHA256(R || canonical(B)) without the inner hash",
+      "draft_refs": [
+        "Section 4, lines 269-271"
+      ],
+      "valid_input": false,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d",
+            "role": "user",
+            "seq": 2,
+            "summary": "Zusammenfassung A 2"
+          }
+        ],
+        "variant": "without_inner_hash"
+      },
+      "expected": {
+        "root_correct": "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a",
+        "root_variant": "fc03bec0b573c60b1e2402c51d44f48e86cb4b8cbe745c3079be0ced1e191562",
+        "equal": false
+      }
+    },
+    {
+      "id": "fold-17",
+      "kind": "fold_variant",
+      "title": "Wrong fold: SHA256(SHA256(canonical(B)) || R)",
+      "draft_refs": [
+        "Section 4, lines 269-271"
+      ],
+      "valid_input": false,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d",
+            "role": "user",
+            "seq": 2,
+            "summary": "Zusammenfassung A 2"
+          }
+        ],
+        "variant": "swapped"
+      },
+      "expected": {
+        "root_correct": "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a",
+        "root_variant": "c0b516f53648a71fe4f3970924e181b9e9701a32c0e266e398f96d7eb6596460",
+        "equal": false
+      }
+    },
+    {
+      "id": "fold-18",
+      "kind": "fold_variant",
+      "title": "Wrong fold: hex text concatenated instead of raw octets",
+      "draft_refs": [
+        "Section 4, lines 269-271",
+        "Section 2, lines 202-205"
+      ],
+      "valid_input": false,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d",
+            "role": "user",
+            "seq": 2,
+            "summary": "Zusammenfassung A 2"
+          }
+        ],
+        "variant": "hex_text"
+      },
+      "expected": {
+        "root_correct": "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a",
+        "root_variant": "83c0ca3f90ea9263d9cfeb68dcfdfcd885ed27d8046dbdfdcf199e18ee3e8b48",
+        "equal": false
+      }
+    },
+    {
+      "id": "fold-19",
+      "kind": "fold_variant",
+      "title": "Wrong genesis: GENESIS_SEED with a trailing NUL (16 octets)",
+      "draft_refs": [
+        "Section 4, lines 262-267"
+      ],
+      "valid_input": false,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d",
+            "role": "user",
+            "seq": 2,
+            "summary": "Zusammenfassung A 2"
+          }
+        ],
+        "variant": "genesis_with_nul"
+      },
+      "expected": {
+        "root_correct": "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a",
+        "root_variant": "a2241905a2f547b30bb23298f2c54c2392189417232bae41003d0a22c5c04a09",
+        "equal": false
+      }
+    },
+    {
+      "id": "fold-20",
+      "kind": "fold_variant",
+      "title": "Wrong genesis: start at 32 zero octets instead of root_0",
+      "draft_refs": [
+        "Section 4, lines 262-267",
+        "Section 3.2, lines 247-248"
+      ],
+      "valid_input": false,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d",
+            "role": "user",
+            "seq": 2,
+            "summary": "Zusammenfassung A 2"
+          }
+        ],
+        "variant": "genesis_zero"
+      },
+      "expected": {
+        "root_correct": "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a",
+        "root_variant": "7969469b660137667600dc2cff721b2b756f19308b48e483071b399d3d7be937",
+        "equal": false
+      }
+    },
+    {
+      "id": "fold-21",
+      "kind": "fold_variant",
+      "title": "Wrong fold: blocks folded in reverse order",
+      "draft_refs": [
+        "Section 4, lines 273-276",
+        "Section 4, lines 285-288"
+      ],
+      "valid_input": false,
+      "input": {
+        "blocks": [
+          {
+            "content_hash": "c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e",
+            "role": "user",
+            "seq": 0,
+            "summary": "Zusammenfassung A 0"
+          },
+          {
+            "content_hash": "506efe0fdd72645f63fa71f0323df477ba8c452e6d6fa3e83ca3362a313e5577",
+            "role": "user",
+            "seq": 1,
+            "summary": "Zusammenfassung A 1"
+          },
+          {
+            "content_hash": "cf6d9cbf875b330f099035c257d62267b1f3caf04bc1f976b59fe200c1b7044d",
+            "role": "user",
+            "seq": 2,
+            "summary": "Zusammenfassung A 2"
+          }
+        ],
+        "variant": "reversed"
+      },
+      "expected": {
+        "root_correct": "11ed10280ebd7a790b4759551a99016cb2af6f06c9c1fd567b59515e14b5357a",
+        "root_variant": "5b43a4468039916441ce413118215867351143e1c9c6fb1178254fed195caf58",
+        "equal": false
+      }
+    }
+  ]
+}

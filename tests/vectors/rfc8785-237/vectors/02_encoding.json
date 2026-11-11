@@ -1,0 +1,1636 @@
+{
+  "file": "02_encoding",
+  "description": "Canonical JSON of a block under the string rule agreed for -01 (RFC 8785, Section 3.2.2.2), with RFC 8785 and two non-conforming encodings for comparison; every boundary of the rule; number lexemes",
+  "cases": [
+    {
+      "id": "encoding-01",
+      "kind": "encoding",
+      "title": "ASCII only: all encodings equal",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "Hallo"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Hallo\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a2248616c6c6f227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Hallo\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Hallo\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Hallo\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "6e6684df2412d68ee36af2375884c57af8d1861c542cdd104bf7d9fed64bbfe6",
+        "root_rfc8785": "6e6684df2412d68ee36af2375884c57af8d1861c542cdd104bf7d9fed64bbfe6",
+        "root_nonconforming_ascii_escape": "6e6684df2412d68ee36af2375884c57af8d1861c542cdd104bf7d9fed64bbfe6",
+        "root_nonconforming_control_unicode_upper": "6e6684df2412d68ee36af2375884c57af8d1861c542cdd104bf7d9fed64bbfe6"
+      }
+    },
+    {
+      "id": "encoding-02",
+      "kind": "encoding",
+      "title": "Umlaut and emoji: the non-conforming ASCII-escaped encoding differs",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "Grüße 😀"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Grüße 😀\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a224772c3bcc39f6520f09f9880227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Grüße 😀\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Gr\\u00fc\\u00dfe \\ud83d\\ude00\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"Grüße 😀\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "d73de0ee44aad0721f6a5e62fbf58b5844662338ee7f8fac4d1c4bf48c527ded",
+        "root_rfc8785": "d73de0ee44aad0721f6a5e62fbf58b5844662338ee7f8fac4d1c4bf48c527ded",
+        "root_nonconforming_ascii_escape": "f5f35bf24cea7f18063ea2b7646bc7639406c08a0f361c2692b093a95105680e",
+        "root_nonconforming_control_unicode_upper": "d73de0ee44aad0721f6a5e62fbf58b5844662338ee7f8fac4d1c4bf48c527ded"
+      }
+    },
+    {
+      "id": "encoding-03",
+      "kind": "encoding",
+      "title": "Line feed and U+001F: the non-conforming uppercase-control encoding differs",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\nb\u001fc"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\nb\\u001fc\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c6e625c753030316663227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\nb\\u001fc\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\nb\\u001fc\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000Ab\\u001Fc\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "e7bc6b4752a51af5b27205f5228b7abcaa7452a1d479275ac7cf05af7d569bd4",
+        "root_rfc8785": "e7bc6b4752a51af5b27205f5228b7abcaa7452a1d479275ac7cf05af7d569bd4",
+        "root_nonconforming_ascii_escape": "e7bc6b4752a51af5b27205f5228b7abcaa7452a1d479275ac7cf05af7d569bd4",
+        "root_nonconforming_control_unicode_upper": "5c0455f041bd2dc9f4de5339196c51727ece2674a90cbca3a3d87bc105cfee07"
+      }
+    },
+    {
+      "id": "encoding-04",
+      "kind": "encoding",
+      "title": "U+007F (DEL): raw under the rule and in RFC 8785",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u007fb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\u007fb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22617f62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\u007fb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u007fb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\u007fb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "342b80d2d40192e9fcd12c35715c996dc6a3024e63157b5d11df7ba9ca11a1e2",
+        "root_rfc8785": "342b80d2d40192e9fcd12c35715c996dc6a3024e63157b5d11df7ba9ca11a1e2",
+        "root_nonconforming_ascii_escape": "0d3a12531eef35045b533fc51ccc52924b9bab2deac306dae6f591d385572c80",
+        "root_nonconforming_control_unicode_upper": "342b80d2d40192e9fcd12c35715c996dc6a3024e63157b5d11df7ba9ca11a1e2"
+      }
+    },
+    {
+      "id": "encoding-05",
+      "kind": "encoding",
+      "title": "U+2028 raw, solidus not escaped",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a b/c"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b/c\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a2261e280a8622f63227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b/c\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u2028b/c\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b/c\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "db05db20f210b6ffd0e26d6800fed14887b9dc2f7a1ec4550049c795597e237d",
+        "root_rfc8785": "db05db20f210b6ffd0e26d6800fed14887b9dc2f7a1ec4550049c795597e237d",
+        "root_nonconforming_ascii_escape": "2f8da77a513457904ec5beb2203c64dc2a08fe679818ae23bb962bbca2f1aad2",
+        "root_nonconforming_control_unicode_upper": "db05db20f210b6ffd0e26d6800fed14887b9dc2f7a1ec4550049c795597e237d"
+      }
+    },
+    {
+      "id": "encoding-06",
+      "kind": "encoding",
+      "title": "NFC: e-acute as U+00E9",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "café"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"café\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22636166c3a9227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"café\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"caf\\u00e9\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"café\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "6534e67dc77546e809b0b391d899dac46d7d3e9b34c82ad526e102ada80515c8",
+        "root_rfc8785": "6534e67dc77546e809b0b391d899dac46d7d3e9b34c82ad526e102ada80515c8",
+        "root_nonconforming_ascii_escape": "1a28c5934458d33401bea5492d2696a2ed5b4eb76a6452b8bed5c82d84f0c3b6",
+        "root_nonconforming_control_unicode_upper": "6534e67dc77546e809b0b391d899dac46d7d3e9b34c82ad526e102ada80515c8"
+      }
+    },
+    {
+      "id": "encoding-07",
+      "kind": "encoding",
+      "title": "NFD: e followed by U+0301",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "café"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"café\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a2263616665cc81227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"café\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"cafe\\u0301\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"café\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "86f59c9732c0a05e5d3bdd71eacb81be4797e6e1fa5902849340fece0e1b18bb",
+        "root_rfc8785": "86f59c9732c0a05e5d3bdd71eacb81be4797e6e1fa5902849340fece0e1b18bb",
+        "root_nonconforming_ascii_escape": "445faed18ca96600839551e2a741a66e78d44856e4e89478d38deaf6b03a7fee",
+        "root_nonconforming_control_unicode_upper": "86f59c9732c0a05e5d3bdd71eacb81be4797e6e1fa5902849340fece0e1b18bb"
+      }
+    },
+    {
+      "id": "encoding-08",
+      "kind": "encoding",
+      "title": "All five short escapes",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "\b\t\n\f\r"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"\\b\\t\\n\\f\\r\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a225c625c745c6e5c665c72227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"\\b\\t\\n\\f\\r\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"\\b\\t\\n\\f\\r\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"\\u0008\\u0009\\u000A\\u000C\\u000D\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "12cc4de3b7fa464c0cace1474bf1a5e589cda84e15d0d9a799ca9537d42f1c64",
+        "root_rfc8785": "12cc4de3b7fa464c0cace1474bf1a5e589cda84e15d0d9a799ca9537d42f1c64",
+        "root_nonconforming_ascii_escape": "12cc4de3b7fa464c0cace1474bf1a5e589cda84e15d0d9a799ca9537d42f1c64",
+        "root_nonconforming_control_unicode_upper": "e40ac6b017b4643cae90bd657b7e5c0df5d75aa86f78bec9b552818d31033a84"
+      }
+    },
+    {
+      "id": "number-01",
+      "kind": "number",
+      "title": "Number lexeme 1: RFC 8785 form and value as seq",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "lexeme": "1"
+      },
+      "expected": {
+        "rfc8785": "1",
+        "seq_value": 1
+      }
+    },
+    {
+      "id": "number-02",
+      "kind": "number",
+      "title": "Number lexeme 1.0: not a canonical seq under -01 (fraction), RFC 8785 form kept for comparison",
+      "draft_refs": [
+        "Section 3.1, lines 235-241",
+        "draft-ruvalcaba-hctp-01 Section 3.1, lines 308-315"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "1.0"
+      },
+      "expected": {
+        "rfc8785": "1",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "number-03",
+      "kind": "number",
+      "title": "Number lexeme 1e0: not a canonical seq under -01 (exponent), RFC 8785 form kept for comparison",
+      "draft_refs": [
+        "Section 3.1, lines 235-241",
+        "draft-ruvalcaba-hctp-01 Section 3.1, lines 308-315"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "1e0"
+      },
+      "expected": {
+        "rfc8785": "1",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "number-04",
+      "kind": "number",
+      "title": "Number lexeme -0: not a canonical seq under -01 (sign), RFC 8785 form kept for comparison",
+      "draft_refs": [
+        "Section 3.1, lines 235-241",
+        "draft-ruvalcaba-hctp-01 Section 3.1, lines 308-315"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "-0"
+      },
+      "expected": {
+        "rfc8785": "0",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "number-05",
+      "kind": "number",
+      "title": "Number lexeme 4294967295: RFC 8785 form and value as seq",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "lexeme": "4294967295"
+      },
+      "expected": {
+        "rfc8785": "4294967295",
+        "seq_value": 4294967295
+      }
+    },
+    {
+      "id": "number-06",
+      "kind": "number",
+      "title": "Number lexeme 4294967296: RFC 8785 form and value as seq",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "4294967296"
+      },
+      "expected": {
+        "rfc8785": "4294967296",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "number-07",
+      "kind": "number",
+      "title": "Number lexeme 1.5: RFC 8785 form and value as seq",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "1.5"
+      },
+      "expected": {
+        "rfc8785": "1.5",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "number-08",
+      "kind": "number",
+      "title": "Number lexeme 1e21: RFC 8785 form and value as seq",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "1e21"
+      },
+      "expected": {
+        "rfc8785": "1e+21",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "number-09",
+      "kind": "number",
+      "title": "Number lexeme 0.000001: RFC 8785 form and value as seq",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "0.000001"
+      },
+      "expected": {
+        "rfc8785": "0.000001",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "number-10",
+      "kind": "number",
+      "title": "Number lexeme 1.5e-7: RFC 8785 form and value as seq",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": false,
+      "input": {
+        "lexeme": "1.5e-7"
+      },
+      "expected": {
+        "rfc8785": "1.5e-7",
+        "seq_value": null
+      }
+    },
+    {
+      "id": "encoding-09",
+      "kind": "encoding",
+      "title": "Control character U+0000 alone: written as \\u0000",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0000b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0000b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303062227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0000b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0000b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0000b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "03140378b84031d42c432d33a36c81b525fcaba8e4d19d0e957b7324fb80b790",
+        "root_rfc8785": "03140378b84031d42c432d33a36c81b525fcaba8e4d19d0e957b7324fb80b790",
+        "root_nonconforming_ascii_escape": "03140378b84031d42c432d33a36c81b525fcaba8e4d19d0e957b7324fb80b790",
+        "root_nonconforming_control_unicode_upper": "03140378b84031d42c432d33a36c81b525fcaba8e4d19d0e957b7324fb80b790"
+      }
+    },
+    {
+      "id": "encoding-10",
+      "kind": "encoding",
+      "title": "Control character U+0001 alone: written as \\u0001",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0001b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0001b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303162227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0001b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0001b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0001b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "93452526d01b6e9db45191c3fd379975a202ae2949b22d073784e0c7f27d40bf",
+        "root_rfc8785": "93452526d01b6e9db45191c3fd379975a202ae2949b22d073784e0c7f27d40bf",
+        "root_nonconforming_ascii_escape": "93452526d01b6e9db45191c3fd379975a202ae2949b22d073784e0c7f27d40bf",
+        "root_nonconforming_control_unicode_upper": "93452526d01b6e9db45191c3fd379975a202ae2949b22d073784e0c7f27d40bf"
+      }
+    },
+    {
+      "id": "encoding-11",
+      "kind": "encoding",
+      "title": "Control character U+0002 alone: written as \\u0002",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0002b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0002b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303262227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0002b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0002b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0002b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "93d6e166a777e7067af21146a49510ad9a9f1898eb39c5da4327a36b97650ee7",
+        "root_rfc8785": "93d6e166a777e7067af21146a49510ad9a9f1898eb39c5da4327a36b97650ee7",
+        "root_nonconforming_ascii_escape": "93d6e166a777e7067af21146a49510ad9a9f1898eb39c5da4327a36b97650ee7",
+        "root_nonconforming_control_unicode_upper": "93d6e166a777e7067af21146a49510ad9a9f1898eb39c5da4327a36b97650ee7"
+      }
+    },
+    {
+      "id": "encoding-12",
+      "kind": "encoding",
+      "title": "Control character U+0003 alone: written as \\u0003",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0003b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0003b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303362227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0003b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0003b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0003b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "455667e82fd49e84d35d5add0d37a900d7b1beb13f7924ba40c7afe237acd74c",
+        "root_rfc8785": "455667e82fd49e84d35d5add0d37a900d7b1beb13f7924ba40c7afe237acd74c",
+        "root_nonconforming_ascii_escape": "455667e82fd49e84d35d5add0d37a900d7b1beb13f7924ba40c7afe237acd74c",
+        "root_nonconforming_control_unicode_upper": "455667e82fd49e84d35d5add0d37a900d7b1beb13f7924ba40c7afe237acd74c"
+      }
+    },
+    {
+      "id": "encoding-13",
+      "kind": "encoding",
+      "title": "Control character U+0004 alone: written as \\u0004",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0004b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0004b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303462227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0004b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0004b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0004b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "90eb24e2441f640625bb73cefdaa6eb0fa03b298aeb519537d203336d7ea7dd4",
+        "root_rfc8785": "90eb24e2441f640625bb73cefdaa6eb0fa03b298aeb519537d203336d7ea7dd4",
+        "root_nonconforming_ascii_escape": "90eb24e2441f640625bb73cefdaa6eb0fa03b298aeb519537d203336d7ea7dd4",
+        "root_nonconforming_control_unicode_upper": "90eb24e2441f640625bb73cefdaa6eb0fa03b298aeb519537d203336d7ea7dd4"
+      }
+    },
+    {
+      "id": "encoding-14",
+      "kind": "encoding",
+      "title": "Control character U+0005 alone: written as \\u0005",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0005b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0005b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303562227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0005b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0005b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0005b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "58f0535605dfe611edc6bdea02ee19abaf230fe6f16c4eac970ab8ed89f3859f",
+        "root_rfc8785": "58f0535605dfe611edc6bdea02ee19abaf230fe6f16c4eac970ab8ed89f3859f",
+        "root_nonconforming_ascii_escape": "58f0535605dfe611edc6bdea02ee19abaf230fe6f16c4eac970ab8ed89f3859f",
+        "root_nonconforming_control_unicode_upper": "58f0535605dfe611edc6bdea02ee19abaf230fe6f16c4eac970ab8ed89f3859f"
+      }
+    },
+    {
+      "id": "encoding-15",
+      "kind": "encoding",
+      "title": "Control character U+0006 alone: written as \\u0006",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0006b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0006b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303662227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0006b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0006b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0006b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "0d5f60495328501a2ae69ea6a7e027919397e4235c466b3dd37db729f6ecbee3",
+        "root_rfc8785": "0d5f60495328501a2ae69ea6a7e027919397e4235c466b3dd37db729f6ecbee3",
+        "root_nonconforming_ascii_escape": "0d5f60495328501a2ae69ea6a7e027919397e4235c466b3dd37db729f6ecbee3",
+        "root_nonconforming_control_unicode_upper": "0d5f60495328501a2ae69ea6a7e027919397e4235c466b3dd37db729f6ecbee3"
+      }
+    },
+    {
+      "id": "encoding-16",
+      "kind": "encoding",
+      "title": "Control character U+0007 alone: written as \\u0007",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0007b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0007b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030303762227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0007b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0007b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0007b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "2f984ad688bdf0d718743915fbd5bc93462c1b91a38bf7b77e17acd3e3140a15",
+        "root_rfc8785": "2f984ad688bdf0d718743915fbd5bc93462c1b91a38bf7b77e17acd3e3140a15",
+        "root_nonconforming_ascii_escape": "2f984ad688bdf0d718743915fbd5bc93462c1b91a38bf7b77e17acd3e3140a15",
+        "root_nonconforming_control_unicode_upper": "2f984ad688bdf0d718743915fbd5bc93462c1b91a38bf7b77e17acd3e3140a15"
+      }
+    },
+    {
+      "id": "encoding-17",
+      "kind": "encoding",
+      "title": "Control character U+0008 alone: written as \\b",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\bb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\bb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c6262227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\bb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\bb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0008b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "3e755fd9fc69a9db7150851cc3f11ca1c2e8803bd1102ca06417f4a2ae4e748a",
+        "root_rfc8785": "3e755fd9fc69a9db7150851cc3f11ca1c2e8803bd1102ca06417f4a2ae4e748a",
+        "root_nonconforming_ascii_escape": "3e755fd9fc69a9db7150851cc3f11ca1c2e8803bd1102ca06417f4a2ae4e748a",
+        "root_nonconforming_control_unicode_upper": "d36661f7677ce28c22392908497386a09cbbd68467eb73674f46cd058d09d4e6"
+      }
+    },
+    {
+      "id": "encoding-18",
+      "kind": "encoding",
+      "title": "Control character U+0009 alone: written as \\t",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\tb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\tb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c7462227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\tb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\tb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0009b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "fde6f56aab5b63a5ec4973246c99191cd604f3e0d3dcfb2eadbddbf5d0d37ac8",
+        "root_rfc8785": "fde6f56aab5b63a5ec4973246c99191cd604f3e0d3dcfb2eadbddbf5d0d37ac8",
+        "root_nonconforming_ascii_escape": "fde6f56aab5b63a5ec4973246c99191cd604f3e0d3dcfb2eadbddbf5d0d37ac8",
+        "root_nonconforming_control_unicode_upper": "249a6d093f8c62a5f8a247c987423a27911b00037547756fea49b898a8f82b5a"
+      }
+    },
+    {
+      "id": "encoding-19",
+      "kind": "encoding",
+      "title": "Control character U+000A alone: written as \\n",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\nb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\nb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c6e62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\nb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\nb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000Ab\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "13919f2f448909f4e98d326745b30b334f04063f8d18d9f250808779437adbb8",
+        "root_rfc8785": "13919f2f448909f4e98d326745b30b334f04063f8d18d9f250808779437adbb8",
+        "root_nonconforming_ascii_escape": "13919f2f448909f4e98d326745b30b334f04063f8d18d9f250808779437adbb8",
+        "root_nonconforming_control_unicode_upper": "a384f34acafb48855675502929ec5e3b14a09188f6e7140bacab7050058f07ba"
+      }
+    },
+    {
+      "id": "encoding-20",
+      "kind": "encoding",
+      "title": "Control character U+000B alone: written as \\u000b",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u000bb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000bb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030306262227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000bb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000bb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000Bb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "480cb510bd4788d04b463c3fa8178f96c88a6db216da21cc1c65d2fe37d70eaa",
+        "root_rfc8785": "480cb510bd4788d04b463c3fa8178f96c88a6db216da21cc1c65d2fe37d70eaa",
+        "root_nonconforming_ascii_escape": "480cb510bd4788d04b463c3fa8178f96c88a6db216da21cc1c65d2fe37d70eaa",
+        "root_nonconforming_control_unicode_upper": "70783a749d0363e7eb4b7a2ecf77d5496aea900f3256f2e8e9303cee732a9f78"
+      }
+    },
+    {
+      "id": "encoding-21",
+      "kind": "encoding",
+      "title": "Control character U+000C alone: written as \\f",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\fb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\fb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c6662227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\fb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\fb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000Cb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "dc44120c820319ec2b516d85094e040185152b91e9a1aa7d0fd77ab07f746fc5",
+        "root_rfc8785": "dc44120c820319ec2b516d85094e040185152b91e9a1aa7d0fd77ab07f746fc5",
+        "root_nonconforming_ascii_escape": "dc44120c820319ec2b516d85094e040185152b91e9a1aa7d0fd77ab07f746fc5",
+        "root_nonconforming_control_unicode_upper": "98d089739de2cf85418e5988a01f683024828c31395442897a833eb489ec336d"
+      }
+    },
+    {
+      "id": "encoding-22",
+      "kind": "encoding",
+      "title": "Control character U+000D alone: written as \\r",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\rb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\rb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c7262227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\rb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\rb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000Db\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "42f10be7a913d8e11215cf8225b4b7ffd56332e474b52d5f05d7bd2417ad43a1",
+        "root_rfc8785": "42f10be7a913d8e11215cf8225b4b7ffd56332e474b52d5f05d7bd2417ad43a1",
+        "root_nonconforming_ascii_escape": "42f10be7a913d8e11215cf8225b4b7ffd56332e474b52d5f05d7bd2417ad43a1",
+        "root_nonconforming_control_unicode_upper": "ff621de0432a2da1420fb9aff9dc31fab7a726786f637ebbc88469805e74a9ca"
+      }
+    },
+    {
+      "id": "encoding-23",
+      "kind": "encoding",
+      "title": "Control character U+000E alone: written as \\u000e",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u000eb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000eb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030306562227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000eb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000eb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000Eb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "f88301543be2b60d4979532a5470858b61414b60834e0bafdd8c4e94673aa381",
+        "root_rfc8785": "f88301543be2b60d4979532a5470858b61414b60834e0bafdd8c4e94673aa381",
+        "root_nonconforming_ascii_escape": "f88301543be2b60d4979532a5470858b61414b60834e0bafdd8c4e94673aa381",
+        "root_nonconforming_control_unicode_upper": "4a456fbcb192898e0235cf0fda50d429df63957e01fc11075555f70bcfc02767"
+      }
+    },
+    {
+      "id": "encoding-24",
+      "kind": "encoding",
+      "title": "Control character U+000F alone: written as \\u000f",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u000fb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000fb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030306662227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000fb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000fb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u000Fb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "0b465c70de4df290e97e534911633d94c90c12435b77d2a03d5ff56feb156925",
+        "root_rfc8785": "0b465c70de4df290e97e534911633d94c90c12435b77d2a03d5ff56feb156925",
+        "root_nonconforming_ascii_escape": "0b465c70de4df290e97e534911633d94c90c12435b77d2a03d5ff56feb156925",
+        "root_nonconforming_control_unicode_upper": "cadf74b4ff9e98e2352eaf85474f242c5ee8a236cfa00dd91c7bbee0d5739196"
+      }
+    },
+    {
+      "id": "encoding-25",
+      "kind": "encoding",
+      "title": "Control character U+0010 alone: written as \\u0010",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0010b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0010b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313062227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0010b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0010b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0010b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "8c126bf73514526182124e2bf8f4e91f194fc80f5b61571482d04cb7f4a56e96",
+        "root_rfc8785": "8c126bf73514526182124e2bf8f4e91f194fc80f5b61571482d04cb7f4a56e96",
+        "root_nonconforming_ascii_escape": "8c126bf73514526182124e2bf8f4e91f194fc80f5b61571482d04cb7f4a56e96",
+        "root_nonconforming_control_unicode_upper": "8c126bf73514526182124e2bf8f4e91f194fc80f5b61571482d04cb7f4a56e96"
+      }
+    },
+    {
+      "id": "encoding-26",
+      "kind": "encoding",
+      "title": "Control character U+0011 alone: written as \\u0011",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0011b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0011b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313162227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0011b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0011b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0011b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "727d5e7a209d3876e1d32f4e0efffe614f5ef4a92796f849a3ccb9e545bdf375",
+        "root_rfc8785": "727d5e7a209d3876e1d32f4e0efffe614f5ef4a92796f849a3ccb9e545bdf375",
+        "root_nonconforming_ascii_escape": "727d5e7a209d3876e1d32f4e0efffe614f5ef4a92796f849a3ccb9e545bdf375",
+        "root_nonconforming_control_unicode_upper": "727d5e7a209d3876e1d32f4e0efffe614f5ef4a92796f849a3ccb9e545bdf375"
+      }
+    },
+    {
+      "id": "encoding-27",
+      "kind": "encoding",
+      "title": "Control character U+0012 alone: written as \\u0012",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0012b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0012b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313262227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0012b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0012b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0012b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "f066af075ad7ee78d9836253936fc51c2a42291e822780c2f44ed9e68464af6b",
+        "root_rfc8785": "f066af075ad7ee78d9836253936fc51c2a42291e822780c2f44ed9e68464af6b",
+        "root_nonconforming_ascii_escape": "f066af075ad7ee78d9836253936fc51c2a42291e822780c2f44ed9e68464af6b",
+        "root_nonconforming_control_unicode_upper": "f066af075ad7ee78d9836253936fc51c2a42291e822780c2f44ed9e68464af6b"
+      }
+    },
+    {
+      "id": "encoding-28",
+      "kind": "encoding",
+      "title": "Control character U+0013 alone: written as \\u0013",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0013b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0013b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313362227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0013b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0013b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0013b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "89668b903231c2881b4b736a94ca54bd81967849adaf278005f4e0622fdbca58",
+        "root_rfc8785": "89668b903231c2881b4b736a94ca54bd81967849adaf278005f4e0622fdbca58",
+        "root_nonconforming_ascii_escape": "89668b903231c2881b4b736a94ca54bd81967849adaf278005f4e0622fdbca58",
+        "root_nonconforming_control_unicode_upper": "89668b903231c2881b4b736a94ca54bd81967849adaf278005f4e0622fdbca58"
+      }
+    },
+    {
+      "id": "encoding-29",
+      "kind": "encoding",
+      "title": "Control character U+0014 alone: written as \\u0014",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0014b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0014b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313462227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0014b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0014b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0014b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "aa02b1af971ea68319a6f899bc52ce396d143cd47a5870cbc4e74375890706f0",
+        "root_rfc8785": "aa02b1af971ea68319a6f899bc52ce396d143cd47a5870cbc4e74375890706f0",
+        "root_nonconforming_ascii_escape": "aa02b1af971ea68319a6f899bc52ce396d143cd47a5870cbc4e74375890706f0",
+        "root_nonconforming_control_unicode_upper": "aa02b1af971ea68319a6f899bc52ce396d143cd47a5870cbc4e74375890706f0"
+      }
+    },
+    {
+      "id": "encoding-30",
+      "kind": "encoding",
+      "title": "Control character U+0015 alone: written as \\u0015",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0015b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0015b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313562227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0015b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0015b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0015b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "8b36bc0302496de6879d6c8158ea0cbb7406d8d54c99beee6c611ef622ef52c3",
+        "root_rfc8785": "8b36bc0302496de6879d6c8158ea0cbb7406d8d54c99beee6c611ef622ef52c3",
+        "root_nonconforming_ascii_escape": "8b36bc0302496de6879d6c8158ea0cbb7406d8d54c99beee6c611ef622ef52c3",
+        "root_nonconforming_control_unicode_upper": "8b36bc0302496de6879d6c8158ea0cbb7406d8d54c99beee6c611ef622ef52c3"
+      }
+    },
+    {
+      "id": "encoding-31",
+      "kind": "encoding",
+      "title": "Control character U+0016 alone: written as \\u0016",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0016b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0016b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313662227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0016b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0016b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0016b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "2c9b89171378bb821366d7d9aa5e31021b07996c05e58abfcc04388c25abe0b5",
+        "root_rfc8785": "2c9b89171378bb821366d7d9aa5e31021b07996c05e58abfcc04388c25abe0b5",
+        "root_nonconforming_ascii_escape": "2c9b89171378bb821366d7d9aa5e31021b07996c05e58abfcc04388c25abe0b5",
+        "root_nonconforming_control_unicode_upper": "2c9b89171378bb821366d7d9aa5e31021b07996c05e58abfcc04388c25abe0b5"
+      }
+    },
+    {
+      "id": "encoding-32",
+      "kind": "encoding",
+      "title": "Control character U+0017 alone: written as \\u0017",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0017b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0017b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313762227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0017b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0017b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0017b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "3d4d515a5206ddbaa37b519fa6d40d548adb54d53bf656051077b4ec3740d43f",
+        "root_rfc8785": "3d4d515a5206ddbaa37b519fa6d40d548adb54d53bf656051077b4ec3740d43f",
+        "root_nonconforming_ascii_escape": "3d4d515a5206ddbaa37b519fa6d40d548adb54d53bf656051077b4ec3740d43f",
+        "root_nonconforming_control_unicode_upper": "3d4d515a5206ddbaa37b519fa6d40d548adb54d53bf656051077b4ec3740d43f"
+      }
+    },
+    {
+      "id": "encoding-33",
+      "kind": "encoding",
+      "title": "Control character U+0018 alone: written as \\u0018",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0018b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0018b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313862227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0018b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0018b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0018b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "4ff441da46682a28c00da3eabefaf36f02e87bb4f7d244a93080e681555e0c07",
+        "root_rfc8785": "4ff441da46682a28c00da3eabefaf36f02e87bb4f7d244a93080e681555e0c07",
+        "root_nonconforming_ascii_escape": "4ff441da46682a28c00da3eabefaf36f02e87bb4f7d244a93080e681555e0c07",
+        "root_nonconforming_control_unicode_upper": "4ff441da46682a28c00da3eabefaf36f02e87bb4f7d244a93080e681555e0c07"
+      }
+    },
+    {
+      "id": "encoding-34",
+      "kind": "encoding",
+      "title": "Control character U+0019 alone: written as \\u0019",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u0019b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0019b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030313962227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0019b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0019b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u0019b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "63267f2a92c01c00aadae50e2e9ad4abcceee74388d6d32594e636c74a6b3764",
+        "root_rfc8785": "63267f2a92c01c00aadae50e2e9ad4abcceee74388d6d32594e636c74a6b3764",
+        "root_nonconforming_ascii_escape": "63267f2a92c01c00aadae50e2e9ad4abcceee74388d6d32594e636c74a6b3764",
+        "root_nonconforming_control_unicode_upper": "63267f2a92c01c00aadae50e2e9ad4abcceee74388d6d32594e636c74a6b3764"
+      }
+    },
+    {
+      "id": "encoding-35",
+      "kind": "encoding",
+      "title": "Control character U+001A alone: written as \\u001a",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u001ab"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001ab\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030316162227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001ab\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001ab\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001Ab\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "42b3cbb5be1dfc02a21214d7e5456abb71e7c78b29162e217b166f220fbf8d8d",
+        "root_rfc8785": "42b3cbb5be1dfc02a21214d7e5456abb71e7c78b29162e217b166f220fbf8d8d",
+        "root_nonconforming_ascii_escape": "42b3cbb5be1dfc02a21214d7e5456abb71e7c78b29162e217b166f220fbf8d8d",
+        "root_nonconforming_control_unicode_upper": "9ccd43bb4d2face2489834ac2a085a7491c1dc9e3f77090a9a51e62cd27e273d"
+      }
+    },
+    {
+      "id": "encoding-36",
+      "kind": "encoding",
+      "title": "Control character U+001B alone: written as \\u001b",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u001bb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001bb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030316262227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001bb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001bb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001Bb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "1bd8032da86e2b4992261a327b403e1a528f61cce9be65f508036399df87a6b9",
+        "root_rfc8785": "1bd8032da86e2b4992261a327b403e1a528f61cce9be65f508036399df87a6b9",
+        "root_nonconforming_ascii_escape": "1bd8032da86e2b4992261a327b403e1a528f61cce9be65f508036399df87a6b9",
+        "root_nonconforming_control_unicode_upper": "bcc096c2cc25e5d8000c411bd7cd2c0cc4fcdfa372c5f6936ad37a9b0130beef"
+      }
+    },
+    {
+      "id": "encoding-37",
+      "kind": "encoding",
+      "title": "Control character U+001C alone: written as \\u001c",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u001cb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001cb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030316362227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001cb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001cb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001Cb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "0ac1335ac84b3b8f7fbde389b3e4baec5824ea855a1e81e378c4dd8717a5bff9",
+        "root_rfc8785": "0ac1335ac84b3b8f7fbde389b3e4baec5824ea855a1e81e378c4dd8717a5bff9",
+        "root_nonconforming_ascii_escape": "0ac1335ac84b3b8f7fbde389b3e4baec5824ea855a1e81e378c4dd8717a5bff9",
+        "root_nonconforming_control_unicode_upper": "2fa2c50dc1d92c62c161742eb65ad4f783b0d4a7fcd7f3abe763390c895d6693"
+      }
+    },
+    {
+      "id": "encoding-38",
+      "kind": "encoding",
+      "title": "Control character U+001D alone: written as \\u001d",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u001db"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001db\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030316462227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001db\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001db\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001Db\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "09493e4093bd639ba9d3efad464f496b00ff59650f92aa77770e8cbd5b7037f2",
+        "root_rfc8785": "09493e4093bd639ba9d3efad464f496b00ff59650f92aa77770e8cbd5b7037f2",
+        "root_nonconforming_ascii_escape": "09493e4093bd639ba9d3efad464f496b00ff59650f92aa77770e8cbd5b7037f2",
+        "root_nonconforming_control_unicode_upper": "8312a1574798ba3c215c5a613459aca211d30a8d535a31e01282d63e816c1663"
+      }
+    },
+    {
+      "id": "encoding-39",
+      "kind": "encoding",
+      "title": "Control character U+001E alone: written as \\u001e",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u001eb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001eb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030316562227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001eb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001eb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001Eb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "fd414a312d92540a4dbaef0b752eb80c740825f74cd794b69d6c47d2a2b74f61",
+        "root_rfc8785": "fd414a312d92540a4dbaef0b752eb80c740825f74cd794b69d6c47d2a2b74f61",
+        "root_nonconforming_ascii_escape": "fd414a312d92540a4dbaef0b752eb80c740825f74cd794b69d6c47d2a2b74f61",
+        "root_nonconforming_control_unicode_upper": "802f085833144cad6822fec06e9d3ea1ab9e40c5970f308ddea82ba8f5ac93d5"
+      }
+    },
+    {
+      "id": "encoding-40",
+      "kind": "encoding",
+      "title": "Control character U+001F alone: written as \\u001f",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u001fb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001fb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c753030316662227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001fb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001fb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u001Fb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "12c2c4abdc239b54d84a45534447c404d74bca6f2f07a87c82697e7f155e8963",
+        "root_rfc8785": "12c2c4abdc239b54d84a45534447c404d74bca6f2f07a87c82697e7f155e8963",
+        "root_nonconforming_ascii_escape": "12c2c4abdc239b54d84a45534447c404d74bca6f2f07a87c82697e7f155e8963",
+        "root_nonconforming_control_unicode_upper": "ca170ca64684a6a1d061b3433d207b53b0c0f7fe31b531e4cc43158bd28b5b7c"
+      }
+    },
+    {
+      "id": "encoding-41",
+      "kind": "encoding",
+      "title": "Quotation mark: written as \\\"",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\"b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\"b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c2262227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\"b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\"b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\"b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "a598a680e9f549cb8cb1c7ec85769efd18a9455b09577b565aa4e63993e0795d",
+        "root_rfc8785": "a598a680e9f549cb8cb1c7ec85769efd18a9455b09577b565aa4e63993e0795d",
+        "root_nonconforming_ascii_escape": "a598a680e9f549cb8cb1c7ec85769efd18a9455b09577b565aa4e63993e0795d",
+        "root_nonconforming_control_unicode_upper": "a598a680e9f549cb8cb1c7ec85769efd18a9455b09577b565aa4e63993e0795d"
+      }
+    },
+    {
+      "id": "encoding-42",
+      "kind": "encoding",
+      "title": "Reverse solidus: written as \\\\",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\\b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\\b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22615c5c62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\\b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\\b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\\\b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "cd0f7890259cac240f96b018da59a99aa6306b7a040d0074ded94d69c5c31938",
+        "root_rfc8785": "cd0f7890259cac240f96b018da59a99aa6306b7a040d0074ded94d69c5c31938",
+        "root_nonconforming_ascii_escape": "cd0f7890259cac240f96b018da59a99aa6306b7a040d0074ded94d69c5c31938",
+        "root_nonconforming_control_unicode_upper": "cd0f7890259cac240f96b018da59a99aa6306b7a040d0074ded94d69c5c31938"
+      }
+    },
+    {
+      "id": "encoding-43",
+      "kind": "encoding",
+      "title": "Solidus raw, not \\/",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a/b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a/b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22612f62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a/b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a/b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a/b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "a0cc8d2eaaea54c6e3b578ff20d0e3987da1095d0879a695aae285a450420d6c",
+        "root_rfc8785": "a0cc8d2eaaea54c6e3b578ff20d0e3987da1095d0879a695aae285a450420d6c",
+        "root_nonconforming_ascii_escape": "a0cc8d2eaaea54c6e3b578ff20d0e3987da1095d0879a695aae285a450420d6c",
+        "root_nonconforming_control_unicode_upper": "a0cc8d2eaaea54c6e3b578ff20d0e3987da1095d0879a695aae285a450420d6c"
+      }
+    },
+    {
+      "id": "encoding-44",
+      "kind": "encoding",
+      "title": "U+007F (DEL) raw",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a\u007fb"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\u007fb\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22617f62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\u007fb\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u007fb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\u007fb\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "342b80d2d40192e9fcd12c35715c996dc6a3024e63157b5d11df7ba9ca11a1e2",
+        "root_rfc8785": "342b80d2d40192e9fcd12c35715c996dc6a3024e63157b5d11df7ba9ca11a1e2",
+        "root_nonconforming_ascii_escape": "0d3a12531eef35045b533fc51ccc52924b9bab2deac306dae6f591d385572c80",
+        "root_nonconforming_control_unicode_upper": "342b80d2d40192e9fcd12c35715c996dc6a3024e63157b5d11df7ba9ca11a1e2"
+      }
+    },
+    {
+      "id": "encoding-45",
+      "kind": "encoding",
+      "title": "U+2028 raw",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a2261e280a862227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u2028b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "da41b664c840ce1c08329420dadda8d4fdf6b551c47b48dfb9a47bbf8f99f2c3",
+        "root_rfc8785": "da41b664c840ce1c08329420dadda8d4fdf6b551c47b48dfb9a47bbf8f99f2c3",
+        "root_nonconforming_ascii_escape": "2109f40119ada376243a1641cdc8cc2fc1c55531ac7d3f9178b64821ea631df8",
+        "root_nonconforming_control_unicode_upper": "da41b664c840ce1c08329420dadda8d4fdf6b551c47b48dfb9a47bbf8f99f2c3"
+      }
+    },
+    {
+      "id": "encoding-46",
+      "kind": "encoding",
+      "title": "U+2029 raw",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a2261e280a962227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\u2029b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "2f46c2e1b53fbd5809144aa2bee4e86bada08472924438620beba796114da114",
+        "root_rfc8785": "2f46c2e1b53fbd5809144aa2bee4e86bada08472924438620beba796114da114",
+        "root_nonconforming_ascii_escape": "8bf9172776eda772d5d9f7e7ff2aa0606b2d231307c774a456780c16d9bb303e",
+        "root_nonconforming_control_unicode_upper": "2f46c2e1b53fbd5809144aa2bee4e86bada08472924438620beba796114da114"
+      }
+    },
+    {
+      "id": "encoding-47",
+      "kind": "encoding",
+      "title": "< raw",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a<b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a<b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22613c62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a<b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a<b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a<b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "229e76c8a5acedbdf2a9cb44af9b9986f4c81fa51fbdff5b2aabb73b5424bf1c",
+        "root_rfc8785": "229e76c8a5acedbdf2a9cb44af9b9986f4c81fa51fbdff5b2aabb73b5424bf1c",
+        "root_nonconforming_ascii_escape": "229e76c8a5acedbdf2a9cb44af9b9986f4c81fa51fbdff5b2aabb73b5424bf1c",
+        "root_nonconforming_control_unicode_upper": "229e76c8a5acedbdf2a9cb44af9b9986f4c81fa51fbdff5b2aabb73b5424bf1c"
+      }
+    },
+    {
+      "id": "encoding-48",
+      "kind": "encoding",
+      "title": "> raw",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a>b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a>b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22613e62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a>b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a>b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a>b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "81cb4be0ed70d757f547e631ee6cf2409e736bb217d42a4a3a9c57336b853d9d",
+        "root_rfc8785": "81cb4be0ed70d757f547e631ee6cf2409e736bb217d42a4a3a9c57336b853d9d",
+        "root_nonconforming_ascii_escape": "81cb4be0ed70d757f547e631ee6cf2409e736bb217d42a4a3a9c57336b853d9d",
+        "root_nonconforming_control_unicode_upper": "81cb4be0ed70d757f547e631ee6cf2409e736bb217d42a4a3a9c57336b853d9d"
+      }
+    },
+    {
+      "id": "encoding-49",
+      "kind": "encoding",
+      "title": "& raw",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a&b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a&b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a22612662227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a&b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a&b\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a&b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "3e9336bb126589e3dc52cc2879fdf9c34e21130acee5ef8e263b28b21a96c72f",
+        "root_rfc8785": "3e9336bb126589e3dc52cc2879fdf9c34e21130acee5ef8e263b28b21a96c72f",
+        "root_nonconforming_ascii_escape": "3e9336bb126589e3dc52cc2879fdf9c34e21130acee5ef8e263b28b21a96c72f",
+        "root_nonconforming_control_unicode_upper": "3e9336bb126589e3dc52cc2879fdf9c34e21130acee5ef8e263b28b21a96c72f"
+      }
+    },
+    {
+      "id": "encoding-50",
+      "kind": "encoding",
+      "title": "U+1D11E outside the BMP raw as four UTF-8 bytes, not a surrogate pair",
+      "draft_refs": [
+        "Section 3.1, lines 235-241"
+      ],
+      "valid_input": true,
+      "input": {
+        "block": {
+          "content_hash": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+          "role": "user",
+          "seq": 0,
+          "summary": "a𝄞b"
+        }
+      },
+      "expected": {
+        "chosen": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a𝄞b\"}",
+        "chosen_hex": "7b22636f6e74656e745f68617368223a2232643731313634326237323662303434303136323763613966626163333266356338353330666231393033636334646230323235383731373932316134383831222c22726f6c65223a2275736572222c22736571223a302c2273756d6d617279223a2261f09d849e62227d",
+        "rfc8785": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a𝄞b\"}",
+        "nonconforming_ascii_escape": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\ud834\\udd1eb\"}",
+        "nonconforming_control_unicode_upper": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a𝄞b\"}",
+        "chosen_equals_rfc8785": true,
+        "root_chosen": "777229f6b9700007247dde86e6d77b08401b45432f063a6c484e9c08202e3696",
+        "root_rfc8785": "777229f6b9700007247dde86e6d77b08401b45432f063a6c484e9c08202e3696",
+        "root_nonconforming_ascii_escape": "2d7b91ed16bcb09a3ab77538241f18e9f6f2bfde3fad9bc88422d21ec3d72c55",
+        "root_nonconforming_control_unicode_upper": "777229f6b9700007247dde86e6d77b08401b45432f063a6c484e9c08202e3696"
+      }
+    },
+    {
+      "id": "encoding-51",
+      "kind": "encoding",
+      "title": "Lone surrogate U+D800: invalid input, no canonical form",
+      "draft_refs": [
+        "Section 3.1, lines 235-241",
+        "Section 3.1, lines 217-219",
+        "Section 3.1, lines 232-233"
+      ],
+      "valid_input": false,
+      "input": {
+        "block_json": "{\"content_hash\":\"2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881\",\"role\":\"user\",\"seq\":0,\"summary\":\"a\\ud800b\"}"
+      },
+      "expected": {
+        "error": "json_invalid"
+      }
+    }
+  ]
+}

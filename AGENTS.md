@@ -6,7 +6,8 @@ Instructions for AI coding agents working in this repository.
 
 A Python library and CLI that hides a message inside LLM-style cover text by arithmetic
 coding over a pre-frozen table of token probabilities (a `.hchan` file). It also carries HCTP,
-an unrelated hash-chained context-transfer format. It is a research artifact at version 0.1.0,
+an unrelated hash-chained context-transfer format, implemented from the Internet-Draft
+draft-ruvalcaba-hctp-01. It is a research artifact at version 0.2.0,
 not a production system; `velamen freeze` did not produce a usable channel in the one
 configuration tested on 2026-10-22 (see the README corrections).
 
@@ -15,7 +16,9 @@ configuration tested on 2026-10-22 (see the README corrections).
 1. `README.md` - status, install, quickstart, and the two correction notes that bound what works.
 2. `velamen/stego.py` - the core: `encode` / `decode`, arithmetic coding, and the crypto.
 3. `velamen/channel.py` - `freeze` and `verify`, and the `.hchan` format.
-4. `docs/PROTOCOL.md` with `velamen/hctp.py` - HCTP, which shares nothing with the stego path.
+4. `docs/PROTOCOL.md` with `velamen/hctp.py` - HCTP, which shares nothing with the stego path. The
+   normative text is draft-ruvalcaba-hctp-01; `tests/test_hctp01_vectors.py` holds it to the
+   published vectors in `tests/vectors/` (do not edit those files; their digests are pinned).
 
 ## What you can and cannot see
 
@@ -26,7 +29,7 @@ configuration tested on 2026-10-22 (see the README corrections).
 
 ## The only numbers to trust (each with its source)
 
-- 14 tests pass on Python 3.12 (measured 2026-10-22; run them to re-confirm). Source: `tests/`.
+- 163 tests pass on Python 3.12 (measured 2026-11-11; run them to re-confirm). Source: `tests/`.
 - Channel keeps the top 5 tokens per position. Source: `TOP_K` in `velamen/channel.py`.
 - HCTP SYNC fixed overhead is 74 bytes. Source: `SyncPacket` in `velamen/hctp.py` (`deserialize`
   rejects anything shorter).
@@ -58,7 +61,7 @@ ruff check velamen/ tests/
 python .github/scripts/check_install_docs.py velamen
 ```
 
-Passing looks like `14 passed` from pytest (as of 2026-10-22), no ruff findings, and
+Passing looks like `163 passed` from pytest (as of 2026-11-11), no ruff findings, and
 `OK: no PyPI install instructions for velamen` from the install-docs check. CI
 (`.github/workflows/ci.yml`) runs the same on Python 3.10, 3.11 and 3.12.
 
