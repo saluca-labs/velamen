@@ -31,3 +31,8 @@ His vectors were written against draft-ruvalcaba-hctp-00 with the string rule th
 adopted. One fold case (`fold-15`) uses an empty role, which -01 makes an invalid block: velamen
 still encodes and folds it to his root, because the encoding is defined, but `from_text` and a
 receiver refuse such a block.
+
+`02_encoding.json` also holds his ten number lexemes (kind `number`). They run as the seq of
+an otherwise canonical block through `parse_block_array`: `1` and `4294967295` parse to their
+value, and the eight his file marks `valid_input: false` are refused, including `1.0`, `1e0`
+and `-0`, which -01 Section 3.1 makes non-canonical spellings of seq.

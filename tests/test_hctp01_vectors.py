@@ -227,3 +227,39 @@ def test_konrad_packet(case):
     assert plain.decode("utf-8") == exp["dynamic_plain"]
     blocks = pkt.decode_blocks()
     assert blocks[-1].seq == exp["seq"]
+
+
+# --------------------------------------------------------------------------
+# Konrad Gruszka's number lexemes (02_encoding.json, kind "number") against the
+# seq rule of -01 Section 3.1: ASCII digits only, no sign, no leading zero except
+# for 0, no fraction, no exponent, value 0..4294967295.
+# --------------------------------------------------------------------------
+
+NUMBER_CASES = _cases("02_encoding.json", ("number",))
+_NUMBER_HASH = hashlib.sha256(b"number").hexdigest()
+
+
+def _array_with_seq(lexeme: str) -> bytes:
+    """A one-block array, canonical in every member, whose seq is written as `lexeme`."""
+    return ('[{"content_hash":"%s","role":"user","seq":%s,"summary":"n"}]'
+            % (_NUMBER_HASH, lexeme)).encode("ascii")
+
+
+def test_konrad_number_case_count():
+    assert len(NUMBER_CASES) == 10
+    assert sum(c["valid_input"] for c in NUMBER_CASES) == 2
+
+
+@pytest.mark.parametrize("case", NUMBER_CASES, ids=lambda c: c["id"])
+def test_konrad_number_as_seq(case):
+    lexeme, exp = case["input"]["lexeme"], case["expected"]
+    raw = _array_with_seq(lexeme)
+    if case["valid_input"]:
+        (block,) = hctp.parse_block_array(raw)
+        assert type(block.seq) is int and block.seq == exp["seq_value"]
+        # the encoder writes this seq back as the RFC 8785 form he gives
+        assert block.canonical_bytes() == _array_with_seq(exp["rfc8785"])[1:-1]
+    else:
+        assert exp["seq_value"] is None
+        with pytest.raises(hctp.InvalidBlock):
+            hctp.parse_block_array(raw)
