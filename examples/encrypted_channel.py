@@ -113,17 +113,19 @@ def main() -> None:
     print("Alice and Bob maintain tamper-evident conversation state using")
     print("the HCTP protocol.  Each turn is folded into a hash chain.\n")
 
+    # Each endpoint keeps one outbound and one inbound chain (draft-ruvalcaba-hctp-01,
+    # Section 7). Here only Alice originates, so one chain carries the conversation.
     alice_chain = ContextChain()
     bob_chain = ContextChain()
 
     # Turn 1: Alice speaks
     alice_chain.add_turn("alice", alice_msg, "proposed rendezvous")
-    print(f"  Alice adds turn: 'proposed rendezvous'")
+    print("  Alice adds turn: 'proposed rendezvous'")
 
-    # Turn 2: Bob replies
+    # Turn 2: Bob's reply, as recorded on Alice's side
     bob_reply = "Confirmed. Bring the documents."
     alice_chain.add_turn("bob", bob_reply, "confirmed, bring docs")
-    print(f"  Alice adds turn: 'confirmed, bring docs'")
+    print("  Alice adds turn: 'confirmed, bring docs'")
 
     # Alice sends SYNC to Bob
     sync = alice_chain.build_sync_packet()
@@ -131,21 +133,23 @@ def main() -> None:
     print(f"\n  SYNC packet:     {len(wire)} bytes on the wire")
     print(f"  Packet valid:    {sync.verify()}")
 
-    # Bob ingests and ACKs
-    blocks = bob_chain.ingest_sync(sync)
-    print(f"  Bob ingested:    {len(blocks)} blocks")
-    for b in blocks:
+    # Bob runs the ordered receiver checks and ACKs
+    result = bob_chain.ingest_sync(wire)
+    print(f"  Bob ingested:    {len(result.blocks)} blocks")
+    for b in result.blocks:
         print(f"    seq={b.seq}  role={b.role:6s}  summary={b.summary!r}")
 
-    ack = bob_chain.build_ack(sync)
-    print(f"\n  ACK packet:      {len(ack.serialize())} bytes")
-    print(f"  ACK seq:         {ack.seq}")
+    ack_wire = result.ack_bytes
+    print(f"\n  ACK packet:      {len(ack_wire)} bytes")
+    print(f"  ACK seq:         {result.ack.seq}")
 
-    # Alice processes ACK -- roots should now match
-    alice_chain.acknowledge(ack.seq)
-    roots_match = alice_chain.static_root == bob_chain.static_root
-    print(f"\n  Alice root:      {alice_chain.static_root.hex()[:24]}...")
-    print(f"  Bob root:        {bob_chain.static_root.hex()[:24]}...")
+    # Alice checks the ACK's new_root against her own fold, then commits it
+    alice_chain.acknowledge(ack_wire)
+    alice_root = alice_chain.sender.static_root
+    bob_root = bob_chain.receiver.local_root
+    roots_match = alice_root == bob_root
+    print(f"\n  Alice root:      {alice_root.hex()[:24]}...")
+    print(f"  Bob root:        {bob_root.hex()[:24]}...")
     print(f"  Roots match:     {'YES' if roots_match else 'NO'}")
     assert roots_match, "Chain roots diverged!"
 

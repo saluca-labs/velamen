@@ -1,0 +1,462 @@
+{
+  "file": "03_packets",
+  "description": "Encoding and decoding of SYNC and ACK (Section 5); self-delimiting streams (Section 10)",
+  "cases": [
+    {
+      "id": "packet-01",
+      "kind": "packet",
+      "title": "SYNC with one block, total length 74 + dynamic_len",
+      "draft_refs": [
+        "Section 5, lines 292-294",
+        "Section 5.1, line 316",
+        "Section 5.1, line 319",
+        "Section 5.1, lines 321-322",
+        "Section 5.1, lines 324-326",
+        "Section 5.1, line 328",
+        "Section 5.1, lines 330, 341-344",
+        "Section 5.1, lines 346-348",
+        "Section 5.1, lines 350-352",
+        "Section 2, lines 202-205",
+        "Section 9, lines 587-601",
+        "Section 5.1, lines 316-317",
+        "Section 11, lines 677-681",
+        "Section 12.1, lines 687-701",
+        "Section 11, lines 656-661"
+      ],
+      "valid_input": true,
+      "input": {
+        "hex": "015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "sync",
+        "seq": 0,
+        "static_root": "adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9",
+        "dynamic_plain": "[{\"content_hash\":\"c7b5ef9be0181ef80d4a54046102d01529e41f3097277fcd6ba7c4c48c65559e\",\"role\":\"user\",\"seq\":0,\"summary\":\"Zusammenfassung A 0\"}]",
+        "dynamic_plain_length": 139,
+        "dynamic_plain_sha256": "202a8ef7e1ee705e3a82ff1fb5dc6ca027aff0cc2a7f169afe2ee458d6b31b34",
+        "integrity_ok": true,
+        "informative": {
+          "dynamic_len": 128,
+          "combined_hash": "fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815",
+          "packet_sha256": "0548d40b64d4794043913e305de1529fd7366d6707fc38528e180de5cd00b10e"
+        },
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-02",
+      "kind": "packet",
+      "title": "ACK, exactly 38 octets",
+      "draft_refs": [
+        "Section 5.2, line 365",
+        "Section 5.2, line 367",
+        "Section 5.2, lines 369-370",
+        "Section 5.2, lines 372-373",
+        "Section 5.2, line 375",
+        "Section 5.1, lines 316-317",
+        "Section 11, lines 677-681",
+        "Section 12.1, lines 687-701"
+      ],
+      "valid_input": true,
+      "input": {
+        "hex": "0141000000000d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97"
+      },
+      "expected": {
+        "type": "ack",
+        "seq": 0,
+        "new_root": "0d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97",
+        "length": 38
+      }
+    },
+    {
+      "id": "packet-03",
+      "kind": "packet",
+      "title": "Empty input",
+      "draft_refs": [
+        "Section 5, lines 292-294"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": ""
+      },
+      "expected": {
+        "type": "error",
+        "reason": "too_short",
+        "length": 0
+      }
+    },
+    {
+      "id": "packet-04",
+      "kind": "packet",
+      "title": "One octet",
+      "draft_refs": [
+        "Section 5, lines 292-294"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "01"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "too_short",
+        "length": 1
+      }
+    },
+    {
+      "id": "packet-05",
+      "kind": "packet",
+      "title": "SYNC with unknown version 0x02",
+      "draft_refs": [
+        "Section 5.1, lines 316-317",
+        "Section 11, lines 677-681",
+        "Section 5.1, line 316",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "025300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_version",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-06",
+      "kind": "packet",
+      "title": "SYNC with unknown version 0x00",
+      "draft_refs": [
+        "Section 5.1, lines 316-317",
+        "Section 11, lines 677-681",
+        "Section 5.1, line 316",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "005300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_version",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-07",
+      "kind": "packet",
+      "title": "SYNC with unknown version 0xff",
+      "draft_refs": [
+        "Section 5.1, lines 316-317",
+        "Section 11, lines 677-681",
+        "Section 5.1, line 316",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "ff5300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_version",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-08",
+      "kind": "packet",
+      "title": "ACK with unknown version 0x02",
+      "draft_refs": [
+        "Section 5.1, lines 316-317",
+        "Section 5.2, line 365"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "0241000000000d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_version",
+        "length": 38
+      }
+    },
+    {
+      "id": "packet-09",
+      "kind": "packet",
+      "title": "Unknown packet type 0x00",
+      "draft_refs": [
+        "Section 12.1, lines 687-701",
+        "Section 5.1, line 319",
+        "Section 5.2, line 367",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "010000000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_packet_type",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-10",
+      "kind": "packet",
+      "title": "Unknown packet type 0x42",
+      "draft_refs": [
+        "Section 12.1, lines 687-701",
+        "Section 5.1, line 319",
+        "Section 5.2, line 367",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "014200000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_packet_type",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-11",
+      "kind": "packet",
+      "title": "Unknown packet type 0x73",
+      "draft_refs": [
+        "Section 12.1, lines 687-701",
+        "Section 5.1, line 319",
+        "Section 5.2, line 367",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "017300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_packet_type",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-12",
+      "kind": "packet",
+      "title": "Unknown packet type 0x61",
+      "draft_refs": [
+        "Section 12.1, lines 687-701",
+        "Section 5.1, line 319",
+        "Section 5.2, line 367",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "016100000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_packet_type",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-13",
+      "kind": "packet",
+      "title": "Unknown packet type 0xff",
+      "draft_refs": [
+        "Section 12.1, lines 687-701",
+        "Section 5.1, line 319",
+        "Section 5.2, line 367",
+        "Section 9, lines 587-601"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "01ff00000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "unknown_packet_type",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-14",
+      "kind": "packet",
+      "title": "SYNC of 73 octets",
+      "draft_refs": [
+        "Section 5.1, lines 350-352"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "too_short",
+        "length": 73
+      }
+    },
+    {
+      "id": "packet-15",
+      "kind": "packet",
+      "title": "dynamic_len one too large: packet too short",
+      "draft_refs": [
+        "Section 5.1, line 328"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000081789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "length_mismatch",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-16",
+      "kind": "packet",
+      "title": "dynamic_len one too small: one octet too many",
+      "draft_refs": [
+        "Section 5.1, line 328"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db90000007f789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "length_mismatch",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-17",
+      "kind": "packet",
+      "title": "dynamic_len 0xFFFFFFFF above the limit, before any allocation",
+      "draft_refs": [
+        "Section 11, lines 656-661",
+        "Section 5.1, line 328"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db9ffffffff789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "dynamic_len_too_large",
+        "length": 202
+      }
+    },
+    {
+      "id": "packet-18",
+      "kind": "packet",
+      "title": "ACK of 37 octets",
+      "draft_refs": [
+        "Section 5.2, line 375"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "0141000000000d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "length_mismatch",
+        "length": 37
+      }
+    },
+    {
+      "id": "packet-19",
+      "kind": "packet",
+      "title": "ACK of 39 octets",
+      "draft_refs": [
+        "Section 5.2, line 375"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "0141000000000d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef9700"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "length_mismatch",
+        "length": 39
+      }
+    },
+    {
+      "id": "packet-20",
+      "kind": "packet",
+      "title": "dynamic_len written little-endian",
+      "draft_refs": [
+        "Section 2, lines 202-205",
+        "Section 5.1, line 328"
+      ],
+      "valid_input": false,
+      "input": {
+        "hex": "015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db980000000789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "type": "error",
+        "reason": "dynamic_len_too_large",
+        "length": 202
+      }
+    },
+    {
+      "id": "frames-01",
+      "kind": "frames",
+      "title": "Self-delimiting: SYNC, ACK, SYNC and a partial packet in a stream",
+      "draft_refs": [
+        "Section 10, lines 605-609",
+        "Section 5.1, lines 350-352",
+        "Section 5.2, line 375"
+      ],
+      "valid_input": true,
+      "input": {
+        "stream_hex": "015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d99998150141000000000d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97015300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815015300000000adf23ff0"
+      },
+      "expected": {
+        "frames": [
+          {
+            "type": "sync",
+            "length": 202
+          },
+          {
+            "type": "ack",
+            "length": 38
+          },
+          {
+            "type": "sync",
+            "length": 202
+          }
+        ],
+        "remaining": 10
+      }
+    },
+    {
+      "id": "frames-02",
+      "kind": "frames",
+      "title": "Stream: ACK, then a packet with unknown version",
+      "draft_refs": [
+        "Section 10, lines 605-609",
+        "Section 5.1, lines 316-317"
+      ],
+      "valid_input": false,
+      "input": {
+        "stream_hex": "0141000000000d91c377f68d33f741875f91eb3c7ba5e31369f82c42ef68ba4f425c6572ef97025300000000adf23ff0aaf06a7edceac586462522c16ba7869f5c122515032bb7f8a8181db900000080789c0d8cbb0a023110007fe5d8da6213f3bccedf5044f2d87885c961f65288f8efa61a8681b97d21ededa0763cb6c01bac906cd4547c24144e50719855d00a951128330a2d3d2951cee8adb4b6a46c62b04925e592d15a7b8213f4fd45f33498fa34a637ac38396a0dfd33c37570a8955a09cca33d97cb82f0bbff01586a2a10fce430183d9f38bf5c0bd10158dc41054b37fc516da2da2260664738d9999815"
+      },
+      "expected": {
+        "frames": [
+          {
+            "type": "ack",
+            "length": 38
+          },
+          {
+            "type": "error",
+            "reason": "unknown_version"
+          }
+        ],
+        "remaining": 202
+      }
+    }
+  ]
+}

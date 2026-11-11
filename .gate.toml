@@ -1,0 +1,9 @@
+# Waivers are narrow, named in the PR, and expire. See salucallc/ci-shared repo-merge-gate standard.
+
+[[waive]]
+check = "control-chars"
+path = "tests/vectors/hctp-01/vectors-01.json"
+match = "0x7F"
+reason = "Deliberate raw U+007F in the draft-ruvalcaba-hctp-01 Appendix A vector file; its bytes are pinned by the SHA-256 the draft prints, so it cannot be re-escaped"
+issue = "https://github.com/salucallc/ci-shared/issues/33"
+expires = "2027-05-09"

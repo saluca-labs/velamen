@@ -10,10 +10,10 @@ Velamen encodes secret messages into LLM-style text using arithmetic coding over
 
 ## Status
 
-Experimental (version 0.1.0). What works today, measured 2026-10-22 on `origin/main` at `213c107`:
+Experimental (version 0.2.0). What works today, measured 2026-10-22 on `origin/main` at `213c107` (stego) and 2026-11-11 (HCTP):
 
-- `encode` / `decode` round-trip, raw and encrypted, on a channel file: the 14 tests in `tests/` pass on Python 3.12, and `examples/basic_usage.py` round-trips on a synthetic channel.
-- HCTP (`ContextChain`, `SyncPacket`, `AckPacket`) builds, serialises and verifies packets; the fixed SYNC overhead is 74 bytes, as documented.
+- `encode` / `decode` round-trip, raw and encrypted, on a channel file: the stego tests in `tests/test_stego.py` pass on Python 3.12, and `examples/basic_usage.py` round-trips on a synthetic channel.
+- HCTP implements [draft-ruvalcaba-hctp-01](docs/PROTOCOL.md): canonical RFC 8785 block encoding, the ordered receiver checks, and the sender's frozen window, split parts and ACK check. It reproduces the draft's Appendix A vectors and Konrad Gruszka's independent fold, encoding and packet vectors (`tests/test_hctp01_vectors.py`). The fixed SYNC overhead is 74 bytes. See [CHANGELOG.md](CHANGELOG.md): 0.2.0 does not interoperate with 0.1.0 on non-ASCII context.
 - `velamen freeze` against a real Ollama model did not produce a usable channel in the one configuration tested (see the correction below). Treat channel freezing as not working until that is fixed.
 
 ## Install
@@ -122,20 +122,21 @@ assert recovered == "secret message"
 
 ### HCTP: Hash-Chain Context Transfer Protocol
 
-Velamen includes HCTP, a protocol for transferring conversational context as compact, tamper-evident, hash-chained payloads. Only deltas cross the wire; full history is a 32-byte root hash.
+Velamen is the reference implementation of HCTP as specified in the Internet-Draft draft-ruvalcaba-hctp-01: a protocol for transferring conversational context as compact, tamper-evident, hash-chained payloads. Only blocks not yet acknowledged cross the wire; acknowledged history is a 32-byte root hash.
 
 ```python
-from velamen import ContextChain
+from velamen import HctpSender, HctpReceiver
 
-chain = ContextChain()
-chain.add_turn("user", "What is the mission status?", "asked about mission status")
-chain.add_turn("agent", "All systems nominal.", "confirmed systems nominal")
+tx, rx = HctpSender(), HctpReceiver()
+tx.add_turn("user", "What is the mission status?", "asked about mission status")
+tx.add_turn("agent", "All systems nominal.", "confirmed systems nominal")
 
-packet = chain.build_sync_packet()
-wire_bytes = packet.serialize()  # 74 bytes + compressed delta
+wire_bytes = tx.build_sync().serialize()  # 74 bytes + compressed delta
+result = rx.receive(wire_bytes)           # the draft's ordered receiver checks
+tx.receive_ack(result.ack_bytes)          # 38-byte ACK; both roots now agree
 ```
 
-This example serialises to 281 bytes (74 fixed plus the compressed delta) in a 2026-10-22 run. See [docs/PROTOCOL.md](docs/PROTOCOL.md) for the full specification.
+This SYNC serialises to 280 bytes (74 fixed plus the compressed delta) in a 2026-11-11 run. HCTP has no confidentiality or peer authentication of its own; carry it over an authenticated, encrypted transport. See [docs/PROTOCOL.md](docs/PROTOCOL.md) for how velamen maps to the draft.
 
 ### Security
 
@@ -178,7 +179,7 @@ flowchart TB
   H --> TB
 ```
 
-Key files: `velamen/cli.py` (CLI), `velamen/stego.py` (coding and crypto), `velamen/channel.py` (freeze and verify), `velamen/hctp.py` (HCTP), `docs/PROTOCOL.md` (HCTP specification; "Hermes" there names the stego transport that `velamen/stego.py` implements).
+Key files: `velamen/cli.py` (CLI), `velamen/stego.py` (coding and crypto), `velamen/channel.py` (freeze and verify), `velamen/hctp.py` (HCTP), `docs/PROTOCOL.md` (HCTP as implemented from draft-ruvalcaba-hctp-01; "Hermes" there names the stego transport that `velamen/stego.py` implements).
 
 ## Screenshots
 
@@ -198,7 +199,8 @@ Copyright 2026 Saluca LLC.
 
 ## Links
 
-- [docs/PROTOCOL.md](docs/PROTOCOL.md): HCTP specification
+- [docs/PROTOCOL.md](docs/PROTOCOL.md): HCTP, as implemented from draft-ruvalcaba-hctp-01
+- [CHANGELOG.md](CHANGELOG.md): release notes
 - [Ollama](https://ollama.com): the local model runtime `velamen freeze` calls
 
-_Last updated: 2026-10-22_
+_Last updated: 2026-11-11_
